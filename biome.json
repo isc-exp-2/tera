@@ -36,7 +36,12 @@
           "level": "error",
           "fix": "safe",
           "options": {
-            "functions": ["clsx", "cva", "tw", "cn"]
+            "functions": [
+              "clsx",
+              "cva",
+              "tw",
+              "cn"
+            ]
           }
         }
       },
