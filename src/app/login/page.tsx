@@ -1,6 +1,7 @@
 "use client";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { googleLoginAllowedDomain } from "@/constants";
 import { firebaseClientAuth } from "@/features/auth/firebase/client";
 import { getSelf } from "@/features/auth/get-self";
 import { logIn } from "@/features/auth/log-in";
@@ -9,6 +10,9 @@ import { logOut } from "@/features/auth/log-out";
 export default function () {
   async function onLogInClick() {
     const googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({
+      hd: googleLoginAllowedDomain,
+    });
     const cred = await signInWithPopup(firebaseClientAuth, googleProvider);
     const idToken = await cred.user.getIdToken();
     await logIn(idToken);
