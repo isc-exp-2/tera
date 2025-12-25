@@ -1,0 +1,21 @@
+name: Lint & format
+
+on:
+    pull_request:
+        types: [opened, reopened, synchronize, ready_for_review]
+    workflow_dispatch:
+
+jobs:
+    biome:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            - name: Setup nodejs
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 20
+            - name: Install dependencies
+              run: npm ci
+            - name: Run Biome CI
+              run: npx biome ci .
