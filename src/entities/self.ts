@@ -4,7 +4,7 @@ import { RoleSchema } from "./role";
 export const AuthSelf = v.object({
   uid: v.string(),
   // Firebase Authentication Admin SDK の型定義は optional になっていないが、処理上必要なため Required にする
-  email: v.string(),
+  email: v.pipe(v.string(), v.email()),
   picture: v.optional(v.string()),
 });
 
