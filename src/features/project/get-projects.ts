@@ -5,9 +5,14 @@ import { collectionKeys } from "@/constants";
 import type { Project } from "@/entities/project";
 import { ProjectWithTimestampTransformer } from "@/entities/project.server";
 import v from "@/entities/valibot";
+import { UnauthorizedError } from "@/errors/auth";
 import { adminFirestore } from "@/firebase/admin";
+import { getAuthSelf } from "../user/get-self";
 
 export const getProjects = cache(async (): Promise<Project[]> => {
+  const authSelf = await getAuthSelf();
+  if (!authSelf) throw new UnauthorizedError();
+
   const snapshot = await adminFirestore
     .collection(collectionKeys.projects)
     .get();
