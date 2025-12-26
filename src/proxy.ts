@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { urls } from "./constants";
-import { getRoleLevel, Role } from "./entities/role";
+import { hasEnoughRole, Role } from "./entities/role";
 import { getAuthSelf, getSelf } from "./features/user/get-self";
 import { getSelfIsCompletedOnboarding } from "./features/user/get-self-is-completed-onboarding";
 import { unreachable } from "./lib/unreachable";
@@ -29,10 +29,7 @@ export async function proxy(req: NextRequest) {
 
   // 管理者専用ページにアクセスしようとした場合、権限をチェックする
   if (urls.managerOnlyPages.includes(req.nextUrl.pathname)) {
-    const selfRoleLevel = getRoleLevel(self.role);
-    const managerRoleLevel = getRoleLevel(Role.Leader);
-
-    if (selfRoleLevel < managerRoleLevel) {
+    if (!hasEnoughRole(self.role, Role.Leader)) {
       return NextResponse.redirect(new URL("/", req.url));
     }
   }

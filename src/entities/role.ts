@@ -16,12 +16,16 @@ const RoleLevels: Record<Role, number> = {
   [Role.Admin]: 4,
 };
 
+function getRoleLevel(role: Role): number {
+  return RoleLevels[role];
+}
+
 /**
- * 対象ロールの権限レベルを取得する
- * これを使用してロールを数値に変換し、比較を行うことで権限チェックを簡単に行えるようにする
- * @param role
+ * ユーザーのロールが必要なロール以上かどうかを判定する
+ * @param userRole
+ * @param requiredRole
  * @returns
  */
-export function getRoleLevel(role: Role): number {
-  return RoleLevels[role];
+export function hasEnoughRole(userRole: Role, requiredRole: Role): boolean {
+  return getRoleLevel(userRole) >= getRoleLevel(requiredRole);
 }

@@ -3,7 +3,7 @@
 import { collectionKeys } from "@/constants";
 import type { Project } from "@/entities/project";
 import { ProjectWithTimestampTransformer } from "@/entities/project.server";
-import { getRoleLevel, Role } from "@/entities/role";
+import { hasEnoughRole, Role } from "@/entities/role";
 import v from "@/entities/valibot";
 import { ForbiddenError, UnauthorizedError } from "@/errors/auth";
 import { getSelf } from "@/features/user/get-self";
@@ -24,8 +24,7 @@ export async function updateProjectById(
 ): Promise<Project> {
   const self = await getSelf();
   if (!self) throw new UnauthorizedError();
-  if (getRoleLevel(self.role) < getRoleLevel(minimumRole))
-    throw new ForbiddenError();
+  if (!hasEnoughRole(self.role, minimumRole)) throw new ForbiddenError();
 
   const docRef = adminFirestore.collection(collectionKeys.projects).doc(id);
   await docRef.update(data);

@@ -7,7 +7,7 @@ import {
   ProjectWithTimestamp,
   ProjectWithTimestampTransformer,
 } from "@/entities/project.server";
-import { getRoleLevel, Role } from "@/entities/role";
+import { hasEnoughRole, Role } from "@/entities/role";
 import v from "@/entities/valibot";
 import { ForbiddenError, UnauthorizedError } from "@/errors/auth";
 import { adminFirestore } from "@/firebase/admin";
@@ -28,8 +28,7 @@ export async function createProject(
 
   // 権限が足りない場合は null を返す
   if (!self) throw new UnauthorizedError();
-  if (getRoleLevel(self.role) < getRoleLevel(minimumRole))
-    throw new ForbiddenError();
+  if (!hasEnoughRole(self.role, minimumRole)) throw new ForbiddenError();
 
   const safeProject = v.parse(v.omit(ProjectWithTimestamp, ["id"]), {
     ...unsafeProject,
