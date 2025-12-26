@@ -1,5 +1,6 @@
 "use server";
 import { collectionKeys } from "@/constants";
+import { Role } from "@/entities/role";
 import { type Self, UserInfo } from "@/entities/self";
 import v from "@/entities/valibot";
 import { adminFirestore } from "@/firebase/admin";
@@ -11,9 +12,9 @@ import { getSelfIsCompletedOnboarding } from "./get-self-is-completed-onboarding
  * すでにオンボーディングが完了している場合、ログインしていない場合は null を返す
  */
 export async function registerSelf(
-  unsafeUserInfo: UserInfo,
+  unsafeUserInfo: Omit<UserInfo, "role">,
 ): Promise<Self | null> {
-  const userInfo = v.parse(UserInfo, unsafeUserInfo);
+  const userInfo = v.parse(UserInfo, { ...unsafeUserInfo, role: Role.Member }); // デフォルトで Member ロールを付与
 
   const authSelf = await getAuthSelf();
   if (!authSelf) return null;

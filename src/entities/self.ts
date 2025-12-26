@@ -1,4 +1,5 @@
 import v from "@/entities/valibot";
+import { RoleSchema } from "./role";
 
 export const AuthSelf = v.object({
   uid: v.string(),
@@ -26,6 +27,8 @@ export const UserInfo = v.object({
   enrollmentYear: v.number(),
 
   departmentId: v.string(),
+
+  role: RoleSchema,
 });
 
 export type UserInfo = v.InferOutput<typeof UserInfo>;
