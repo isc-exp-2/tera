@@ -1,5 +1,6 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
 import { envKeys } from "@/constants";
 import { getEnv } from "@/lib/get-env";
 
@@ -16,3 +17,5 @@ const adminApp = getApps().length
     });
 
 export const firebaseAdminAuth = getAuth(adminApp);
+
+export const firestore = getFirestore();

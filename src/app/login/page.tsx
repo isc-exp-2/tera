@@ -2,10 +2,10 @@
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { googleLoginAllowedDomain } from "@/constants";
-import { firebaseClientAuth } from "@/features/user/firebase/client";
 import { getSelf } from "@/features/user/get-self";
 import { logIn } from "@/features/user/log-in";
 import { logOut } from "@/features/user/log-out";
+import { firebaseClientAuth } from "@/firebase/client";
 
 export default function () {
   async function onLogInClick() {

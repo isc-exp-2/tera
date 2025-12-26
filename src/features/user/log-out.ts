@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { cookieKeys } from "@/constants";
-import { firebaseAdminAuth } from "./firebase/admin";
+import { firebaseAdminAuth } from "@/firebase/admin";
 
 /**
  * ログアウト
