@@ -9,8 +9,7 @@ export const AuthSelf = v.object({
 
 export type AuthSelf = v.InferOutput<typeof AuthSelf>;
 
-export const Self = v.object({
-  ...AuthSelf.entries,
+export const UserInfo = v.object({
   /**
    * 名前（姓）
    */
@@ -27,6 +26,13 @@ export const Self = v.object({
   enrollmentYear: v.number(),
 
   departmentId: v.string(),
+});
+
+export type UserInfo = v.InferOutput<typeof UserInfo>;
+
+export const Self = v.object({
+  ...AuthSelf.entries,
+  ...UserInfo.entries,
 });
 
 export type Self = v.InferOutput<typeof Self>;
