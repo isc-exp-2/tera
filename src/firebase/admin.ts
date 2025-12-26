@@ -18,4 +18,4 @@ const adminApp = getApps().length
 
 export const firebaseAdminAuth = getAuth(adminApp);
 
-export const firestore = getFirestore();
+export const adminFirestore = getFirestore();

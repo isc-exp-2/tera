@@ -2,7 +2,7 @@
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { googleLoginAllowedDomain } from "@/constants";
-import { getSelf } from "@/features/user/get-self";
+import { getAuthSelf } from "@/features/user/get-self";
 import { logIn } from "@/features/user/log-in";
 import { logOut } from "@/features/user/log-out";
 import { firebaseClientAuth } from "@/firebase/client";
@@ -19,7 +19,7 @@ export default function () {
   }
 
   async function onLogOutClick() {
-    const self = await getSelf();
+    const self = await getAuthSelf();
     if (self) logOut(self.uid);
   }
 
