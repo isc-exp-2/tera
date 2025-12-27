@@ -1,12 +1,10 @@
 "use server";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { collectionKeys, cookieKeys } from "@/constants";
 import { AuthSelf, Self } from "@/entities/self";
 import v from "@/entities/valibot";
 import { adminFirestore, firebaseAdminAuth } from "@/firebase/admin";
-
-import "server-only";
-import { cache } from "react";
 
 /**
  * 現在ログインしているユーザーの情報を取得する
