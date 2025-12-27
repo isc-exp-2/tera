@@ -13,5 +13,6 @@ export class UnauthorizedError extends Error {
 export class ForbiddenError extends Error {
   constructor() {
     super("アクセス権がありません");
+    this.name = "ForbiddenError";
   }
 }
