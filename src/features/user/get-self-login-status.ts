@@ -1,13 +1,8 @@
 "use server";
 import { cache } from "react";
+import { LoginStatus } from "@/entities/login";
 import type { AuthSelf, Self } from "@/entities/self";
 import { getAuthSelf, getSelf } from "./get-self";
-
-export enum LoginStatus {
-  NotLoggedIn = "NotLoggedIn",
-  IncompleteOnboarding = "IncompleteOnboarding",
-  LoggedIn = "LoggedIn",
-}
 
 /**
  * 現在のユーザーのログイン状態を取得する

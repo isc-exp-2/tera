@@ -1,12 +1,12 @@
 "use server";
 import { collectionKeys, googleLoginAllowedDomain } from "@/constants";
+import { LoginStatus } from "@/entities/login";
 import { Role } from "@/entities/role";
 import { type Self, UserInfo } from "@/entities/self";
 import v from "@/entities/valibot";
 import { adminFirestore } from "@/firebase/admin";
 import { getDepartmentById } from "./get-department-by-id";
-import { getAuthSelf } from "./get-self";
-import { getSelfLoginStatus, LoginStatus } from "./get-self-login-status";
+import { getSelfLoginStatus } from "./get-self-login-status";
 
 /**
  * 新規ユーザー登録を行う
