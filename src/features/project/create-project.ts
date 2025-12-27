@@ -17,16 +17,14 @@ const minimumRole = Role.Leader;
 /**
  * 案件を作成する
  * Leader 以上の権限が必要
- * ログインしていない、権限が足りない場合は null を返す
  * @param unsafeProject
  * @returns
  */
 export async function createProject(
   unsafeProject: Omit<Project, "id" | "createdAt" | "createdBy">,
-): Promise<Project | null> {
+): Promise<Project> {
   const self = await getSelf();
 
-  // 権限が足りない場合は null を返す
   if (!self) throw new UnauthorizedError();
   if (!hasEnoughRole(self.role, minimumRole)) throw new ForbiddenError();
 
