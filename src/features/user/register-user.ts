@@ -4,8 +4,9 @@ import { Role } from "@/entities/role";
 import { type Self, UserInfo } from "@/entities/self";
 import v from "@/entities/valibot";
 import { adminFirestore } from "@/firebase/admin";
+import { getDepartmentById } from "./get-department-by-id";
 import { getAuthSelf } from "./get-self";
-import { getSelfIsCompletedOnboarding } from "./get-self-is-completed-onboarding";
+import { getSelfLoginStatus, LoginStatus } from "./get-self-login-status";
 
 /**
  * 新規ユーザー登録を行う
@@ -17,26 +18,28 @@ export async function registerSelf(
 ): Promise<Self | null> {
   const userInfo = v.parse(UserInfo, { ...unsafeUserInfo, role: Role.Member }); // デフォルトで Member ロールを付与
 
-  const authSelf = await getAuthSelf();
-  if (!authSelf) return null;
+  const selfLoginStatus = await getSelfLoginStatus();
+  if (selfLoginStatus.status !== LoginStatus.IncompleteOnboarding) return null;
 
   // 許可されていないメールドメインの場合、エラーをスローする
   // クライアントサイドで制限しているため、正規のログインルートでは発生しないが、セキュリティのためサーバーサイドでもチェックする
-  if (authSelf.email.split("@").pop() !== googleLoginAllowedDomain) {
+  if (
+    selfLoginStatus.self.email.split("@").pop() !== googleLoginAllowedDomain
+  ) {
     throw new NotAllowedEmailDomainError();
   }
 
-  const selfIsCompletedOnboarding = await getSelfIsCompletedOnboarding();
-  if (selfIsCompletedOnboarding) return null;
+  const department = await getDepartmentById(userInfo.departmentId);
+  if (!department) return null; // 部署が存在しない場合は null を返す （通常はクライアントサイドで弾かれるはず）
 
   // Users コレクションに情報を登録する
   await adminFirestore
     .collection(collectionKeys.users)
-    .doc(authSelf.uid)
+    .doc(selfLoginStatus.self.uid)
     .set(userInfo);
 
   return {
-    ...authSelf,
+    ...selfLoginStatus.self,
     ...userInfo,
   };
 }
