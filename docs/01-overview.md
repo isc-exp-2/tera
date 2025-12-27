@@ -6,6 +6,7 @@ TERAは、EXP. サークルにおいて、メンバーが交通費を簡単に�
 ## 技術スタック
 - Next.js
 - shadcn/ui
+- Tanstack Query
 - Tailwind CSS
 - TypeScript
 - Firebase (Authentication, Firestore)
