@@ -12,31 +12,33 @@ export const config = {
 
 export async function proxy(req: NextRequest) {
   const selfLoginStatus = await getSelfLoginStatus();
-  const isLoggedIn = selfLoginStatus.status !== LoginStatus.NotLoggedIn;
+  const isNotLoggedIn = selfLoginStatus.status === LoginStatus.NotLoggedIn;
+  const isAuthLoggedIn =
+    selfLoginStatus.status === LoginStatus.IncompleteOnboarding;
   const isCompleteOnboarding = selfLoginStatus.status === LoginStatus.LoggedIn;
 
   if (req.nextUrl.pathname === urls.login) {
     // ログインページへのアクセス
-    if (isLoggedIn) {
-      if (!isCompleteOnboarding) {
-        // オンボーディングが完了していない場合、オンボーディングページへリダイレクトする
-        return NextResponse.redirect(new URL(urls.onboarding, req.url));
-      }
+    if (isAuthLoggedIn) {
+      // オンボーディングが完了していない場合、オンボーディングページへリダイレクトする
+      return NextResponse.redirect(new URL(urls.onboarding, req.url));
+    }
 
+    if (isCompleteOnboarding) {
       // すでにログインしている場合、ホームへリダイレクトする
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL(urls.home, req.url));
     }
 
     return NextResponse.next();
   }
 
   // 未ログインの場合、ログインページへリダイレクトする
-  if (!isLoggedIn) {
+  if (isNotLoggedIn) {
     return NextResponse.redirect(new URL(urls.login, req.url));
   }
 
   // オンボーディングが完了していない場合、オンボーディングページへリダイレクトする
-  if (!isCompleteOnboarding && req.nextUrl.pathname !== urls.onboarding) {
+  if (isAuthLoggedIn && req.nextUrl.pathname !== urls.onboarding) {
     return NextResponse.redirect(new URL(urls.onboarding, req.url));
   }
 
@@ -46,7 +48,7 @@ export async function proxy(req: NextRequest) {
       !isCompleteOnboarding ||
       !hasEnoughRole(selfLoginStatus.self.role, Role.Leader)
     ) {
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL(urls.home, req.url));
     }
   }
 

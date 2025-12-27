@@ -1,3 +1,5 @@
+export const home = "/";
+
 export const onboarding = "/onboarding";
 
 export const login = "/login";
