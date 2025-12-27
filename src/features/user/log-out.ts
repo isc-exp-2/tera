@@ -1,15 +1,20 @@
 "use server";
 import { cookies } from "next/headers";
-import { cookieKeys } from "@/constants";
+import { redirect } from "next/navigation";
+import { cookieKeys, urls } from "@/constants";
 import { firebaseAdminAuth } from "@/firebase/admin";
+import { getAuthSelf } from "./get-self";
 
 /**
- * ログアウト
+ * ログアウト。
  * Firebase Authentication のセッションを終了し、クライアントの session cookie を削除する。
- * @param uid
+ * @param redirectTo ログアウト後にリダイレクトする URL (デフォルト: ログインページ)
  */
-export async function logOut(uid: string) {
-  await firebaseAdminAuth.revokeRefreshTokens(uid);
+export async function logOut(redirectTo: string = urls.login) {
+  const authSelf = await getAuthSelf();
+  if (authSelf) await firebaseAdminAuth.revokeRefreshTokens(authSelf.uid);
 
   (await cookies()).delete(cookieKeys.session);
+
+  redirect(redirectTo);
 }
