@@ -10,16 +10,30 @@ export const AuthSelf = v.object({
 
 export type AuthSelf = v.InferOutput<typeof AuthSelf>;
 
+export const LastName = v.pipe(
+  v.string(),
+  v.minLength(1, "姓を入力してください。"),
+);
+
+export type LastName = v.InferOutput<typeof LastName>;
+
+export const FirstName = v.pipe(
+  v.string(),
+  v.minLength(1, "名を入力してください。"),
+);
+
+export type FirstName = v.InferOutput<typeof FirstName>;
+
 export const UserInfo = v.object({
   /**
    * 名前（姓）
    */
-  lastName: v.pipe(v.string(), v.minLength(1, "姓を入力してください。")),
+  lastName: LastName,
 
   /**
    * 名前（名）
    */
-  firstName: v.pipe(v.string(), v.minLength(1, "名を入力してください。")),
+  firstName: FirstName,
 
   /**
    * 入学年度
