@@ -4,3 +4,5 @@ export const departments = ["departments"] as const;
 
 export const department = (departmentId: string) =>
   ["department", departmentId] as const;
+
+export const projects = ["projects"] as const;
