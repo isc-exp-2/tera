@@ -12,6 +12,11 @@ import { UnauthorizedError } from "@/errors/auth";
 import { getSelf } from "@/features/user/get-self";
 import { adminFirestore } from "@/firebase/admin";
 
+/**
+ * ログインしているユーザーとして新しい交通費申請を作成する
+ * @param unsafeRequest
+ * @returns
+ */
 export async function createRequest(
   unsafeRequest: Omit<Request, "id" | "status" | "requestedBy">,
 ): Promise<Request> {

@@ -9,6 +9,9 @@ import { UnauthorizedError } from "@/errors/auth";
 import { adminFirestore } from "@/firebase/admin";
 import { getAuthSelf } from "../user/get-self";
 
+/**
+ * 存在するすべての案件情報を取得
+ */
 export const getProjects = cache(async (): Promise<Project[]> => {
   const authSelf = await getAuthSelf();
   if (!authSelf) throw new UnauthorizedError();
