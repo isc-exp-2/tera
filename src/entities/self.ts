@@ -14,12 +14,12 @@ export const UserInfo = v.object({
   /**
    * 名前（姓）
    */
-  lastName: v.string(),
+  lastName: v.pipe(v.string(), v.minLength(1, "姓を入力してください。")),
 
   /**
    * 名前（名）
    */
-  firstName: v.string(),
+  firstName: v.pipe(v.string(), v.minLength(1, "名を入力してください。")),
 
   /**
    * 入学年度
