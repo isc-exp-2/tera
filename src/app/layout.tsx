@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SelfProvider } from "@/features/user/contexts/self";
 import { getSelf } from "@/features/user/get-self";
+import { QueryDevtools, QueryProvider } from "@/query";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,12 @@ export default async function ({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SelfProvider self={self}>{children}</SelfProvider>
+        <SelfProvider self={self}>
+          <QueryProvider>
+            <QueryDevtools />
+            {children}
+          </QueryProvider>
+        </SelfProvider>
       </body>
     </html>
   );
