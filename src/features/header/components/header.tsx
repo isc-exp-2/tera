@@ -1,3 +1,5 @@
+import { CenteredLayout } from "@/components/centered-layout";
+
 export function Header() {
-  return <></>;
+  return <CenteredLayout>Header</CenteredLayout>;
 }
