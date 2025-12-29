@@ -1,8 +1,8 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/components/query";
 import { queryKeys } from "@/constants";
 import type { RequestStatus } from "@/entities/request";
-import { queryClient } from "@/query";
 import { updateRequestStatusById } from "../update-request-status-by-id";
 
 export function useUpdateRequestStatusByIdMutation() {

@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/components/query";
 import { queryKeys } from "@/constants";
 import type { Department } from "@/entities/department";
-import { queryClient } from "@/query";
 import { getDepartmentById } from "../get-department-by-id";
 
 export function useDepartmentByIdQuery(departmentId: string) {

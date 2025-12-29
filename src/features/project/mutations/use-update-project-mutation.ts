@@ -1,7 +1,7 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/components/query";
 import { queryKeys } from "@/constants";
-import { queryClient } from "@/query";
 import { updateProjectById } from "../update-project";
 
 /**

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { QueryDevtools, QueryProvider } from "@/components/query";
 import { SelfProvider } from "@/features/user/contexts/self";
 import { getSelf } from "@/features/user/get-self";
-import { QueryDevtools, QueryProvider } from "@/query";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
