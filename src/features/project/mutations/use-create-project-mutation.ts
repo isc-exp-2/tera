@@ -1,10 +1,11 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/constants";
-import { queryClient } from "@/query";
 import { createProject } from "../create-project";
 
 export function useCreateProjectMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: createProject,
     onSuccess: () => {

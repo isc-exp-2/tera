@@ -1,7 +1,6 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/constants";
-import { queryClient } from "@/query";
 import { updateProjectById } from "../update-project";
 
 /**
@@ -13,6 +12,8 @@ import { updateProjectById } from "../update-project";
  * mutation.mutate({ id: "projectId", data: { name: "New Project Name" } });
  */
 export function useUpdateProjectByIdMutation() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     // mutationFn が引数を１つしか受け取れないため、オブジェクトでラップする
     mutationFn: ({
