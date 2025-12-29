@@ -1,0 +1,9 @@
+export const firebase = {
+  clientEmail: "FIREBASE_CLIENT_EMAIL",
+  privateKey: "FIREBASE_PRIVATE_KEY",
+
+  projectId: "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
+  apiKey: "NEXT_PUBLIC_FIREBASE_API_KEY",
+  authDomain: "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN",
+  appId: "NEXT_PUBLIC_FIREBASE_APP_ID",
+};
