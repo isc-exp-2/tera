@@ -17,7 +17,7 @@ git --version # git version 2.49.0.windows.1
 ## リポジトリのクローン
 GitHub からリポジトリをクローンします。以下のコマンドをコードを置きたいディレクトリで実行してください。
 ```bash
-git clone https://github.com/IWASAKI-ISC-EXP/tera.git
+git clone https://github.com/isc-exp-2/tera.git
 cd tera # クローンされたリポジトリのディレクトリに移動
 ```
 
