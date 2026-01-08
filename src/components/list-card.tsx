@@ -7,29 +7,28 @@ import {
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-type ListcardProps = {
+type ListCardProps = {
   title: string;
   description: string;
   icon: LucideIcon;
+  iconbg: string;
   iconclassName: string;
   href: string;
 };
 
-export default function Listcard({ title, description, icon, iconclassName, href }: ListcardProps) {
+export default function ListCard({ title, description, icon, iconclassName, href, iconbg }: ListCardProps) {
     const IconComponent = icon;
     return (
-        <div className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid gap-6">
             <Link href={href}>
                 <Card>
                     <CardHeader>
-                        <div  className="bg-indigo-100 rounded-md w-12 h-12 mb-4 flex items-center justify-center">
+                        <div  className={"rounded-md w-12 h-12 mb-4 flex items-center justify-center "+ iconbg}>
                             <IconComponent className={iconclassName} />
                         </div>
-                        <CardTitle>{title}</CardTitle>
+                        <CardTitle className="mb-2 text-gray-900">{title}</CardTitle>
                         <CardDescription>{description}</CardDescription>
                     </CardHeader>
                 </Card>
             </Link>
-        </div>
     )
 }
