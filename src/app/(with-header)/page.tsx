@@ -2,10 +2,11 @@ import ListCard from "@/components/list-card";
 import { FileText, UsersRound, FolderKanban } from "lucide-react";
 import { getSelf } from "@/features/user/get-self";
 import { hasEnoughRole, Role } from "@/entities/role";
+import { urls } from "@/constants";
 
 export default async function () {
   const self = await getSelf();
-  if (self) {
+  if (!self) return
     return (
       <main className="py-8 max-w-6xl mx-auto">
         <div className="mb-8">
@@ -24,7 +25,7 @@ export default async function () {
             iconbg="bg-indigo-100"
             icon={FileText}
             iconclassName="text-indigo-600 w-6 h-6"
-            href="@/me/requests"
+            href={urls.merequests}
           />
 
           {hasEnoughRole(self.role, Role.Leader) && (
@@ -35,7 +36,7 @@ export default async function () {
                 iconbg="bg-green-100"
                 icon={UsersRound}
                 iconclassName="text-green-600 w-6 h-6"
-                href="@/manage/requests"
+                href={urls.managerequests}
               />
 
               <ListCard
@@ -44,7 +45,7 @@ export default async function () {
                 iconbg="bg-purple-100"
                 icon={FolderKanban}
                 iconclassName="text-purple-600 w-6 h-6"
-                href="@/manage/projects"
+                href={urls.manageProjects}
               />
             </>
           )}
@@ -52,4 +53,3 @@ export default async function () {
       </main>
     );
   }
-}
