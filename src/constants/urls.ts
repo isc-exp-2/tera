@@ -8,9 +8,9 @@ export const manageExpenses = "/manage/expenses";
 
 export const manageProjects = "/manage/projects";
 
-export const merequests = "/me/requests";
+export const meRequests = "/me/requests";
 
-export const managerequests = "/manage/requests";
+export const manageRequests = "/manage/requests";
 
 /**
  * 幹部以上のみアクセス可能なページ一覧

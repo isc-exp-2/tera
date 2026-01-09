@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import {
@@ -11,8 +12,8 @@ type ListCardProps = {
   title: string;
   description: string;
   icon: LucideIcon;
-  iconbg: string;
-  iconclassName: string;
+  iconBg: string;
+  iconClassName: string;
   href: string;
 };
 
@@ -20,9 +21,9 @@ export function ListCard({
   title,
   description,
   icon,
-  iconclassName,
+  iconClassName,
   href,
-  iconbg,
+  iconBg,
 }: ListCardProps) {
   const IconComponent = icon;
   return (
@@ -30,12 +31,12 @@ export function ListCard({
       <Card>
         <CardHeader>
           <div
-            className={
-              "mb-4 flex h-12 w-12 items-center justify-center rounded-md" +
-              iconbg
-            }
+            className={clsx(
+              "mb-4 flex h-12 w-12 items-center justify-center rounded-md",
+              iconBg,
+            )}
           >
-            <IconComponent className={iconclassName} />
+            <IconComponent className={iconClassName} />
           </div>
           <CardTitle className="mb-2 text-gray-900">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
