@@ -1,11 +1,11 @@
+import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
-import Link from "next/link";
 
 type ListCardProps = {
   title: string;
@@ -31,7 +31,7 @@ export default function ListCard({
         <CardHeader>
           <div
             className={
-              "rounded-md w-12 h-12 mb-4 flex items-center justify-center " +
+              "mb-4 flex h-12 w-12 items-center justify-center rounded-md" +
               iconbg
             }
           >

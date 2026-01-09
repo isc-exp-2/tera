@@ -1,16 +1,16 @@
+import { FileText, FolderKanban, UsersRound } from "lucide-react";
 import ListCard from "@/components/list-card";
-import { FileText, UsersRound, FolderKanban } from "lucide-react";
-import { getSelf } from "@/features/user/get-self";
-import { hasEnoughRole, Role } from "@/entities/role";
 import { urls } from "@/constants";
+import { hasEnoughRole, Role } from "@/entities/role";
+import { getSelf } from "@/features/user/get-self";
 
 export default async function () {
   const self = await getSelf();
   if (!self) return;
   return (
-    <main className="py-8 max-w-6xl mx-auto">
+    <main className="mx-auto max-w-6xl py-8">
       <div className="mb-8">
-        <h1 className="text-gray-900 text-xl font-medium mb-2 tracking-[-0.3em]">
+        <h1 className="mb-2 font-medium text-gray-900 text-xl tracking-[-0.3em]">
           ようこそ
         </h1>
         <p className="text-gray-600 tracking-[-0.14em]">
@@ -18,7 +18,7 @@ export default async function () {
         </p>
       </div>
 
-      <div className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <ListCard
           title="申請一覧（個人）"
           description="自分の交通費申請を確認・管理できます"
