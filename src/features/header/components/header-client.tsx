@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { useTransition } from "react";
-
-import type { AuthSelf } from "@/entities/self";
-import { logOut } from "@/features/user/log-out";
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { AuthSelf } from "@/entities/self";
+import { logOut } from "@/features/user/log-out";
 
 type Props = {
   authSelf: AuthSelf | null;
@@ -29,10 +23,7 @@ export function HeaderClient({ authSelf }: Props) {
 
   if (!authSelf) {
     return (
-      <Link
-        href="/login"
-        className="text-sm font-medium hover:underline"
-      >
+      <Link href="/login" className="font-medium text-sm hover:underline">
         ログイン
       </Link>
     );
@@ -41,7 +32,7 @@ export function HeaderClient({ authSelf }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-10 w-10 cursor-pointer mr-5">
+        <Avatar className="mr-5 h-10 w-10 cursor-pointer">
           <AvatarImage
             src={authSelf.picture ?? undefined}
             alt={authSelf.email ?? "user"}
@@ -54,9 +45,7 @@ export function HeaderClient({ authSelf }: Props) {
 
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
-          <span className="text-sm font-medium">
-            {authSelf.email}
-          </span>
+          <span className="font-medium text-sm">{authSelf.email}</span>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
