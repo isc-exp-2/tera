@@ -24,7 +24,7 @@ export default async function () {
           description="自分の交通費申請を確認・管理できます"
           iconBg="bg-indigo-100"
           icon={FileText}
-          iconClassName="text-indigo-600 w-6 h-6"
+          iconClassName="text-indigo-600"
           href={urls.meRequests}
         />
 
@@ -35,7 +35,7 @@ export default async function () {
               description="全メンバーの申請を承認・精算できます"
               iconBg="bg-green-100"
               icon={UsersRound}
-              iconClassName="text-green-600 w-6 h-6"
+              iconClassName="text-green-600"
               href={urls.manageRequests}
             />
 
@@ -44,7 +44,7 @@ export default async function () {
               description="交通費申請の案件を管理できます"
               iconBg="bg-purple-100"
               icon={FolderKanban}
-              iconClassName="text-purple-600 w-6 h-6"
+              iconClassName="text-purple-600"
               href={urls.manageProjects}
             />
           </>
