@@ -16,7 +16,7 @@ type ListCardProps = {
   href: string;
 };
 
-export default function ListCard({
+export function ListCard({
   title,
   description,
   icon,
