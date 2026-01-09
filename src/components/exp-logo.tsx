@@ -3,7 +3,6 @@ import expLogo from "../../public/images/exp-logo.png";
 
 type ExpLogoProps = {
   width: number;
-  // height: number;
 };
 
 export function ExpLogo({ width }: ExpLogoProps) {
