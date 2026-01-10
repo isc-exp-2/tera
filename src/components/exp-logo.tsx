@@ -1,12 +1,10 @@
-import Image from "next/image";
+import Image, { type ImageProps } from "next/image";
 import expLogo from "../../public/images/exp-logo.png";
 
-type ExpLogoProps = {
-  width: number;
-  height: number;
-  priority: boolean;
-};
+type ExpLogoProps = Omit<ImageProps, "src" | "alt" | "width" | "height">;
 
 export function ExpLogo(props: ExpLogoProps) {
-  return <Image src={expLogo} alt="Exp Logo" {...props} />;
+  return (
+    <Image src={expLogo} alt="Exp Logo" width={1032} height={462} {...props} />
+  );
 }
