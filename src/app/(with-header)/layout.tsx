@@ -1,12 +1,12 @@
 import type { PropsWithChildren } from "react";
 import { CenteredLayout } from "@/components/centered-layout";
 // import { Header } from "@/features/header/components/header";
-import { HeaderServ } from "@/features/header/components/header-serv";
+import { Header } from "@/features/header/components/header";
 
 export default function ({ children }: PropsWithChildren) {
   return (
     <>
-      <HeaderServ />
+      <Header />
       <CenteredLayout>{children}</CenteredLayout>
     </>
   );
