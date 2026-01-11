@@ -31,7 +31,7 @@ export default async function ({
   return (
     <html lang="ja" className={`${inter.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-linear-to-br from-[#e0f7fa] via-[#f1f8e9] to-[#fff9c4] bg-fixed antialiased`}
       >
         <SelfProvider self={self}>
           <QueryProvider>
