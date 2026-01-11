@@ -9,5 +9,5 @@ export const config = {
 export async function proxy(req: NextRequest) {
   const selfLoginStatus = await getSelfLoginStatus();
 
-  // return authProxy(req, selfLoginStatus);
+  return authProxy(req, selfLoginStatus);
 }
