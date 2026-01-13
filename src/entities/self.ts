@@ -22,6 +22,9 @@ export const FirstName = v.pipe(
   v.minLength(1, "名を入力してください。"),
 );
 
+export const EnrollmentYear = v.string();
+export const Department = v.string();
+
 export type FirstName = v.InferOutput<typeof FirstName>;
 
 export const UserInfo = v.object({
