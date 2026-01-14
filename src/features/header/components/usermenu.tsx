@@ -1,4 +1,3 @@
-// user-menu.tsx
 "use client";
 
 import Link from "next/link";
@@ -35,18 +34,14 @@ export function UserMenu({ authSelf }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="mr-5 h-10 w-10 cursor-pointer">
-          <AvatarImage src={authSelf.picture ?? undefined} />
+          <AvatarImage src={authSelf.picture} />
           <AvatarFallback>
-            {authSelf.email?.slice(0, 2).toUpperCase()}
+            {authSelf.email.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56 font-medium text-sm">
-        {/* <DropdownMenuLabel>
-          <span className="rounded bg-gray-50 py-1">{authSelf.uid}</span>
-        </DropdownMenuLabel> */}
-
         <DropdownMenuLabel>
           <span className="rounded bg-gray-50 py-1">{authSelf.email}</span>
         </DropdownMenuLabel>
