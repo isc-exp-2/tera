@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { urls } from "@/constants";
 import {
   Department,
@@ -33,40 +34,44 @@ import { useFormValue } from "@/hooks/useFormValue";
 
 export function OnboardingForm() {
   const router = useRouter();
-  const { data: departments = [], isLoading } = useDepartmentsQuery();
+  const { data: departments = [], isPending } = useDepartmentsQuery();
   const [lastName, setLastName, lastNameError] = useFormValue("", LastName);
   const [firstName, setFirstName, firstNameError] = useFormValue("", FirstName);
-  const [year, setYear] = useFormValue("", EnrollmentYear);
-  const [department, setDepartment] = useFormValue("", Department);
+  const [enrollmentYear, setYear, yearError] = useFormValue("", EnrollmentYear);
+  const [departmentId, setDepartment, departmentError] = useFormValue(
+    "",
+    Department,
+  );
+  const enrollmentYears = Years();
 
   const [isSubmitting, setSubmitting] = useState(false);
-
-  if (isLoading) {
-    return;
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     setLastName(lastName);
     setFirstName(firstName);
-    const yearInvalid = year === "";
-    const departmentInvalid = department === "";
-    if (lastNameError || firstNameError || yearInvalid || departmentInvalid) {
+    setYear(enrollmentYear);
+    setDepartment(departmentId);
+    if (lastNameError || firstNameError || yearError || departmentError) {
       alert("すべての必須項目を入力してください");
+      setSubmitting(false);
       return;
     }
 
     setSubmitting(true);
 
-    await registerSelf({
-      lastName,
-      firstName,
-      enrollmentYear: Number(year),
-      departmentId: department,
-    });
-
-    router.push(urls.home);
+    try {
+      await registerSelf({
+        lastName,
+        firstName,
+        enrollmentYear,
+        departmentId,
+      });
+      router.push(urls.home);
+    } finally {
+      setSubmitting(false);
+    }
   }
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -113,27 +118,32 @@ export function OnboardingForm() {
               </div>
             </div>
             <div className="mb-5">
-              <OnboardingSelect
-                label="入学年度"
-                placeholder="学年を選択してください"
-                values={[
-                  { id: "2023", name: "2023年" },
-                  { id: "2024", name: "2024年" },
-                  { id: "2025", name: "2025年" },
-                  { id: "2026", name: "2026年" },
-                ]}
-                value={year}
-                onChange={setYear}
-              />
+              {isPending ? (
+                <Skeleton className="h-10 w-full rounded-md" />
+              ) : (
+                <OnboardingSelect
+                  label="入学年度"
+                  placeholder="学年を選択してください"
+                  values={enrollmentYears}
+                  value={enrollmentYear}
+                  onChange={setYear}
+                  disabled={isPending}
+                />
+              )}
             </div>
             <div className="mb-5">
-              <OnboardingSelect
-                label="学科"
-                placeholder="学科を選択してください"
-                values={departments.map((d) => ({ id: d.id, name: d.name }))}
-                value={department}
-                onChange={setDepartment}
-              />
+              {isPending ? (
+                <Skeleton className="h-10 w-full rounded-md" />
+              ) : (
+                <OnboardingSelect
+                  label="学科"
+                  placeholder="学科を選択してください"
+                  values={departments.map((d) => ({ id: d.id, name: d.name }))}
+                  value={departmentId}
+                  onChange={setDepartment}
+                  disabled={isPending}
+                />
+              )}
             </div>
             <Button
               type="submit"
@@ -162,22 +172,24 @@ type OnboardingSelectProps = {
   values: { id: string; name: string }[];
   value: string;
   onChange: (value: string) => void;
+  disabled: boolean;
 };
 
-export function OnboardingSelect({
+function OnboardingSelect({
   label,
   placeholder,
   values,
   value,
   onChange,
+  disabled = false,
 }: OnboardingSelectProps) {
   return (
     <>
       <Label className="mb-2 text-muted-foreground">
         {label} <span className="text-red-500">*</span>
       </Label>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full bg-gray-100">
+      <Select value={value} onValueChange={onChange} disabled={disabled}>
+        <SelectTrigger className="w-full bg-gray-100" disabled={disabled}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
@@ -190,4 +202,23 @@ export function OnboardingSelect({
       </Select>
     </>
   );
+}
+
+function Years() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+  const startYear = currentYear - 4;
+  const years: { id: string; name: string }[] = [];
+
+  for (let y = currentYear; y >= startYear; y--) {
+    if (y === currentYear && currentMonth < 4) continue;
+
+    years.push({
+      id: String(y),
+      name: `${y}年`,
+    });
+  }
+
+  return years;
 }
