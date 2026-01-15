@@ -19,7 +19,11 @@ export function GoogleLogInButton() {
   }
 
   return (
-    <button type="button" onClick={onClick}>
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full rounded-lg bg-cyan-400 py-2 text-white hover:bg-cyan-300"
+    >
       Googleでログイン（gn.iwasaki.ac.jp のみ）
     </button>
   );
