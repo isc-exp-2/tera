@@ -31,12 +31,12 @@ export const EnrollmentYear = v.pipe(
 
 export type EnrollmentYear = v.InferOutput<typeof EnrollmentYear>;
 
-export const Department = v.pipe(
+export const DepartmentId = v.pipe(
   v.string(),
   v.minLength(1, "学科を選択してください"),
 );
 
-export type Department = v.InferOutput<typeof Department>;
+export type Department = v.InferOutput<typeof DepartmentId>;
 
 export const UserInfo = v.object({
   /**
@@ -54,7 +54,7 @@ export const UserInfo = v.object({
    */
   enrollmentYear: EnrollmentYear,
 
-  departmentId: Department,
+  departmentId: DepartmentId,
 
   role: RoleSchema,
 });
