@@ -1,5 +1,3 @@
-"use client";
-
 import { ExpLogo } from "@/components/exp-logo";
 import { GoogleLogInButton } from "@/features/user/components/google-log-in-button";
 
