@@ -1,9 +1,9 @@
 "use client";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Button } from "@/components/ui/button";
 import { googleLoginAllowedDomain } from "@/constants";
 import { logIn } from "@/features/user/log-in";
 import { firebaseClientAuth } from "@/firebase/client";
-import { Button } from "@/components/ui/button";
 
 export function GoogleLogInButton() {
   async function onClick() {
@@ -23,7 +23,8 @@ export function GoogleLogInButton() {
     <Button
       type="button"
       onClick={onClick}
-      className="w-full rounded-lg bg-sky-600 py-2 text-white hover:bg-sky-400 cursor-pointer">
+      className="w-full cursor-pointer rounded-lg bg-sky-600 py-2 text-white hover:bg-sky-400"
+    >
       Googleでログイン（gn.iwasaki.ac.jp のみ）
     </Button>
   );
