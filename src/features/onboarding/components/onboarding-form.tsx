@@ -39,7 +39,7 @@ export function OnboardingForm() {
   const { data: departments = [], isPending } = useDepartmentsQuery();
   const [lastName, setLastName, lastNameError] = useFormValue("", LastName);
   const [firstName, setFirstName, firstNameError] = useFormValue("", FirstName);
-  const [enrollmentYear, setYear, yearError] = useFormValue("", EnrollmentYear);
+  const [enrollmentYear, setYear, yearError] = useFormValue(0, EnrollmentYear);
   const [departmentId, setDepartment, departmentError] = useFormValue(
     "",
     DepartmentId,
@@ -50,7 +50,7 @@ export function OnboardingForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (lastNameError || firstNameError || !enrollmentYear || !departmentId) {
+    if (!lastName || !firstName || !enrollmentYear || !departmentId) {
       alert("すべての必須項目を入力してください");
       setSubmitting(false);
       return;
@@ -105,8 +105,8 @@ export function OnboardingForm() {
                     入学年度 <span className="text-red-500">*</span>
                   </Label>
                   <Select
-                    value={enrollmentYear}
-                    onValueChange={(v) => setYear(v)}
+                    value={enrollmentYear === 0 ? "" : String(enrollmentYear)}
+                    onValueChange={(v) => setYear(Number(v))}
                     disabled={isPending}
                   >
                     <SelectTrigger
@@ -117,8 +117,8 @@ export function OnboardingForm() {
                     </SelectTrigger>
                     <SelectContent>
                       {enrollmentYears.map((year) => (
-                        <SelectItem key={year} value={String(year)}>
-                          {year}
+                        <SelectItem key={year} value={year.toString()}>
+                          {year}年
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -147,7 +147,7 @@ export function OnboardingForm() {
                     </SelectTrigger>
                     <SelectContent>
                       {departments.map((dept) => (
-                        <SelectItem key={dept.id} value={dept.name}>
+                        <SelectItem key={dept.id} value={dept.id}>
                           {dept.name}
                         </SelectItem>
                       ))}

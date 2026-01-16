@@ -25,8 +25,8 @@ export const FirstName = v.pipe(
 export type FirstName = v.InferOutput<typeof FirstName>;
 
 export const EnrollmentYear = v.pipe(
-  v.string(),
-  v.minLength(1, "入学年度を選択してください"),
+  v.number(),
+  v.minValue(1, "入学年度を選択してください"),
 );
 
 export type EnrollmentYear = v.InferOutput<typeof EnrollmentYear>;
