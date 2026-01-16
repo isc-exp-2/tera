@@ -31,11 +31,11 @@ import {
 import { useDepartmentsQuery } from "@/features/user/queries/use-departments-query";
 import { registerSelf } from "@/features/user/register-self";
 import { useFormValue } from "@/hooks/useFormValue";
-import { yearsCalculation } from "../utils/years-calculation";
+import { getAvailableEnrollmentYears } from "../utils/years-calculation";
 
 export function OnboardingForm() {
   const router = useRouter();
-  const enrollmentYears = yearsCalculation();
+  const enrollmentYears = getAvailableEnrollmentYears();
   const { data: departments = [], isPending } = useDepartmentsQuery();
   const [lastName, setLastName, lastNameError] = useFormValue("", LastName);
   const [firstName, setFirstName, firstNameError] = useFormValue("", FirstName);
@@ -49,12 +49,6 @@ export function OnboardingForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    if (!lastName || !firstName || !enrollmentYear || !departmentId) {
-      alert("すべての必須項目を入力してください");
-      setSubmitting(false);
-      return;
-    }
 
     setSubmitting(true);
 
@@ -97,69 +91,71 @@ export function OnboardingForm() {
               </div>
             </div>
             <div className="mb-5">
+              <Label className="mb-2 text-muted-foreground">
+                入学年度 <span className="text-red-500">*</span>
+              </Label>
               {isPending ? (
                 <Skeleton className="h-10 w-full rounded-md" />
               ) : (
-                <>
-                  <Label className="mb-2 text-muted-foreground">
-                    入学年度 <span className="text-red-500">*</span>
-                  </Label>
-                  <Select
-                    value={enrollmentYear === 0 ? "" : String(enrollmentYear)}
-                    onValueChange={(v) => setYear(Number(v))}
-                    disabled={isPending}
+                <Select
+                  value={enrollmentYear === 0 ? "" : String(enrollmentYear)}
+                  onValueChange={(v) => setYear(Number(v))}
+                  disabled={isPending}
+                >
+                  <SelectTrigger
+                    className="w-full bg-gray-100"
+                    // disabled={isPending}
                   >
-                    <SelectTrigger
-                      className="w-full bg-gray-100"
-                      disabled={isPending}
-                    >
-                      <SelectValue placeholder="学年を選択してください" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {enrollmentYears.map((year) => (
-                        <SelectItem key={year} value={year.toString()}>
-                          {year}年
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </>
+                    <SelectValue placeholder="学年を選択してください" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enrollmentYears.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}年
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             </div>
             <div className="mb-5">
+              <Label className="mb-2 text-muted-foreground">
+                学科 <span className="text-red-500">*</span>
+              </Label>
               {isPending ? (
                 <Skeleton className="h-10 w-full rounded-md" />
               ) : (
-                <>
-                  <Label className="mb-2 text-muted-foreground">
-                    学科 <span className="text-red-500">*</span>
-                  </Label>
-                  <Select
-                    value={departmentId}
-                    onValueChange={(v) => setDepartment(v)}
-                    disabled={isPending}
+                <Select
+                  value={departmentId}
+                  onValueChange={(v) => setDepartment(v)}
+                  disabled={isPending}
+                >
+                  <SelectTrigger
+                    className="w-full bg-gray-100"
+                    // disabled={isPending}
                   >
-                    <SelectTrigger
-                      className="w-full bg-gray-100"
-                      disabled={isPending}
-                    >
-                      <SelectValue placeholder="学科を選択してください" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {departments.map((dept) => (
-                        <SelectItem key={dept.id} value={dept.id}>
-                          {dept.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </>
+                    <SelectValue placeholder="学科を選択してください" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments.map((dept) => (
+                      <SelectItem key={dept.id} value={dept.id}>
+                        {dept.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             </div>
             <Button
               type="submit"
               className="w-full py-5"
-              disabled={isSubmitting}
+              disabled={
+                isSubmitting ||
+                !lastName ||
+                !firstName ||
+                !enrollmentYear ||
+                !departmentId
+              }
             >
               <p> 登録してホームへ</p>
             </Button>

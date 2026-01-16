@@ -1,4 +1,4 @@
-export function yearsCalculation() {
+export function getAvailableEnrollmentYears() {
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
