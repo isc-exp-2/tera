@@ -1,10 +1,12 @@
 import { ExpLogo } from "@/components/exp-logo";
+import { Card } from "@/components/ui/card";
 import { GoogleLogInButton } from "@/features/user/components/google-log-in-button";
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-[#e0f7fa] via-[#f1f8e9] to-[#fff9c4] bg-fixed">
-      <div className="w-120 rounded-2xl bg-white p-8 shadow-xl">
+    <div className="flex min-h-screen items-center justify-center">
+      <Card className="w-120 rounded-2xl bg-white p-8 shadow-xl">
+        
         {/* ロゴ */}
         <div className="mb-4 flex justify-center">
           <ExpLogo className="flex w-44 justify-center" />
@@ -15,14 +17,11 @@ export default function LoginPage() {
           交通費精算システム
         </h1>
 
-        {/* サブテキスト */}
-        <p className="mb-6 text-center text-gray-500 text-sm"></p>
-
         {/* ログインボタン */}
-        <div className="flex justify-center">
-          <GoogleLogInButton />
-        </div>
-      </div>
-    </div>
-  );
-}
+        
+          <GoogleLogInButton /> 
+          </Card>
+         </div>
+       );
+
+        }

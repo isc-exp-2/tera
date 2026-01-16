@@ -3,6 +3,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { googleLoginAllowedDomain } from "@/constants";
 import { logIn } from "@/features/user/log-in";
 import { firebaseClientAuth } from "@/firebase/client";
+import { Button } from "@/components/ui/button";
 
 export function GoogleLogInButton() {
   async function onClick() {
@@ -19,12 +20,12 @@ export function GoogleLogInButton() {
   }
 
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
-      className="w-full rounded-lg bg-cyan-400 py-2 text-black hover:bg-cyan-300"
+      className="w-full rounded-lg bg-sky-600 py-2 text-white hover:bg-sky-400"
     >
       Googleでログイン（gn.iwasaki.ac.jp のみ）
-    </button>
+    </Button>
   );
 }
