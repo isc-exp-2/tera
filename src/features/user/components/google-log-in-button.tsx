@@ -23,8 +23,7 @@ export function GoogleLogInButton() {
     <Button
       type="button"
       onClick={onClick}
-      className="w-full rounded-lg bg-sky-600 py-2 text-white hover:bg-sky-400"
-    >
+      className="w-full rounded-lg bg-sky-600 py-2 text-white hover:bg-sky-400 cursor-pointer">
       Googleでログイン（gn.iwasaki.ac.jp のみ）
     </Button>
   );

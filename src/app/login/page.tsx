@@ -6,7 +6,6 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-120 rounded-2xl bg-white p-8 shadow-xl">
-        
         {/* ロゴ */}
         <div className="mb-4 flex justify-center">
           <ExpLogo className="flex w-44 justify-center" />
@@ -18,10 +17,9 @@ export default function LoginPage() {
         </h1>
 
         {/* ログインボタン */}
-        
-          <GoogleLogInButton /> 
-          </Card>
-         </div>
-       );
 
-        }
+        <GoogleLogInButton />
+      </Card>
+    </div>
+  );
+}
