@@ -31,7 +31,7 @@ import {
 import { useDepartmentsQuery } from "@/features/user/queries/use-departments-query";
 import { registerSelf } from "@/features/user/register-self";
 import { useFormValue } from "@/hooks/useFormValue";
-import { getAvailableEnrollmentYears } from "../utils/years-calculation";
+import { getAvailableEnrollmentYears } from "../utils/get-available-enrollment-years";
 
 export function OnboardingForm() {
   const router = useRouter();
@@ -102,10 +102,7 @@ export function OnboardingForm() {
                   onValueChange={(v) => setYear(Number(v))}
                   disabled={isPending}
                 >
-                  <SelectTrigger
-                    className="w-full bg-gray-100"
-                    // disabled={isPending}
-                  >
+                  <SelectTrigger className="w-full bg-gray-100">
                     <SelectValue placeholder="学年を選択してください" />
                   </SelectTrigger>
                   <SelectContent>
@@ -130,10 +127,7 @@ export function OnboardingForm() {
                   onValueChange={(v) => setDepartment(v)}
                   disabled={isPending}
                 >
-                  <SelectTrigger
-                    className="w-full bg-gray-100"
-                    // disabled={isPending}
-                  >
+                  <SelectTrigger className="w-full bg-gray-100">
                     <SelectValue placeholder="学科を選択してください" />
                   </SelectTrigger>
                   <SelectContent>
