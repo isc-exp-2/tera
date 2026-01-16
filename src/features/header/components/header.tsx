@@ -1,29 +1,25 @@
+import Link from "next/link";
 import { CenteredLayout } from "@/components/centered-layout";
 import { ExpLogo } from "@/components/exp-logo";
 import { home } from "@/constants/urls";
-import { getAuthSelf } from "@/features/user/get-self";
-import { UserMenu } from "./usermenu";
+import { UserMenu } from "./user-menu";
 
 export async function Header() {
-  const authSelf = await getAuthSelf();
-
   return (
     <header className="border-b bg-white">
       <CenteredLayout>
         <div className="flex h-20 items-center justify-between">
           <Logo />
-          <UserMenu authSelf={authSelf} />
+          <UserMenu />
         </div>
       </CenteredLayout>
     </header>
   );
 }
 
-import Link from "next/link";
-
 function Logo() {
   return (
-    <div className="ml-14 flex items-center gap-4">
+    <div className="flex items-center gap-4">
       <Link
         href={home}
         aria-label="トップページへ"
