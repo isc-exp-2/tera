@@ -13,12 +13,19 @@ import { useSelf } from "@/features/user/hooks/use-self";
 import { logOut } from "@/features/user/log-out";
 import { useDepartmentByIdQuery } from "@/features/user/queries/use-department-by-id-query";
 
-const nemu = (label: string, value: React.ReactNode) => (
-  <DropdownMenuLabel>
-    <p className="text-gray-500 text-xs">{label}</p>
-    <span className="rounded py-1 text-black text-sm">{value}</span>
-  </DropdownMenuLabel>
-);
+type DropdownItemProps = {
+  label: string;
+  value: string | number | undefined;
+};
+
+function DropdownItem({ label, value }: DropdownItemProps) {
+  return (
+    <DropdownMenuLabel>
+      <p className="text-gray-500 text-xs">{label}</p>
+      <span className="rounded py-1 text-black text-sm">{value}</span>
+    </DropdownMenuLabel>
+  );
+}
 
 export function UserMenu() {
   const self = useSelf();
@@ -34,15 +41,18 @@ export function UserMenu() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56 font-normal font-sans">
-        {nemu("氏名", `${self.lastName} ${self.firstName}`)}
+        <DropdownItem
+          label="氏名"
+          value={`${self.lastName} ${self.firstName}`}
+        />
 
-        {nemu("メールアドレス", <span className="text-xs">{self.email}</span>)}
+        <DropdownItem label="メールアドレス" value={self.email} />
 
-        {nemu("入学年度", `${self.enrollmentYear}年`)}
+        <DropdownItem label="入学年度" value={`${self.enrollmentYear}年`} />
 
-        {nemu("学科", department.data?.name)}
+        <DropdownItem label="学科" value={department.data?.name} />
 
-        {nemu("権限", self.role)}
+        <DropdownItem label="権限" value={self.role} />
 
         <DropdownMenuSeparator />
 
