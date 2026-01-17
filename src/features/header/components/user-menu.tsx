@@ -28,7 +28,7 @@ export function UserMenu() {
 
       <DropdownMenuContent align="end" className="w-56 font-normal font-sans">
         <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">ユーザー名</p>
+          <p className="text-gray-500 text-xs">氏名</p>
 
           <span className="rounded py-1 text-black text-sm">
             {self.lastName} {self.firstName}
@@ -36,7 +36,7 @@ export function UserMenu() {
         </DropdownMenuLabel>
 
         <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">登録メールアドレス</p>
+          <p className="text-gray-500 text-xs">メールアドレス</p>
           <span className="rounded py-1 text-black text-xs">{self.email}</span>
         </DropdownMenuLabel>
 
@@ -48,7 +48,7 @@ export function UserMenu() {
         </DropdownMenuLabel>
 
         <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">所属学科</p>
+          <p className="text-gray-500 text-xs">学科</p>
           <span className="rounded py-1 text-black text-sm">
             {department.data?.name}
           </span>
