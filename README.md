@@ -19,3 +19,4 @@ TERAは、EXP. サークルにおいて、メンバーが交通費を簡単に�
 3. [認証・認可設計](docs/03-authentication.md)
 4. [データベースについて](docs/04-database.md)
 5. [環境について（ドメイン）](docs/05-environment.md)
+6. [ディレクトリ構造](docs/06-directory.md)
