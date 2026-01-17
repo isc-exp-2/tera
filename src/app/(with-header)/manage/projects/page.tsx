@@ -22,12 +22,14 @@ import {
 export default function CaseManagementPage() {
   return (
     <Dialog>
-      <form>
+      <div className="flex justify-end">
         <DialogTrigger asChild>
           <Button className="bg-indigo-600 px-6 py-2 text-white">
             ＋ 案件を追加
           </Button>
         </DialogTrigger>
+      </div>
+      <form>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-xl">案件を追加</DialogTitle>
