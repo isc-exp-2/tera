@@ -26,23 +26,37 @@ export function UserMenu() {
         </Avatar>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-56 font-medium text-sm">
+      <DropdownMenuContent align="end" className="w-56 font-normal font-sans">
         <DropdownMenuLabel>
-          <span className="rounded py-1">
-            {self.firstName} {self.lastName}
+          <p className="text-gray-500 text-xs">ユーザー名</p>
+
+          <span className="rounded py-1 text-black text-sm">
+            {self.lastName} {self.firstName}
           </span>
         </DropdownMenuLabel>
+
         <DropdownMenuLabel>
-          <span className="rounded bg-gray-50 py-1">{self.email}</span>
+          <p className="text-gray-500 text-xs">登録メールアドレス</p>
+          <span className="rounded py-1 text-black text-xs">{self.email}</span>
         </DropdownMenuLabel>
+
         <DropdownMenuLabel>
-          <span className="rounded py-1">{self.enrollmentYear}</span>
+          <p className="text-gray-500 text-xs">入学年度</p>
+          <span className="rounded py-1 text-black text-sm">
+            {self.enrollmentYear}年
+          </span>
         </DropdownMenuLabel>
+
         <DropdownMenuLabel>
-          <span className="rounded py-1">{department.data?.name}</span>
+          <p className="text-gray-500 text-xs">所属学科</p>
+          <span className="rounded py-1 text-black text-sm">
+            {department.data?.name}
+          </span>
         </DropdownMenuLabel>
+
         <DropdownMenuLabel>
-          <span className="rounded py-1">{self.role}</span>
+          <p className="text-gray-500 text-xs">権限</p>
+          <span className="rounded py-1 text-black text-sm">{self.role}</span>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />

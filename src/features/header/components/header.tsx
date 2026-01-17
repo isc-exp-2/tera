@@ -2,7 +2,7 @@ import Link from "next/link";
 import { CenteredLayout } from "@/components/centered-layout";
 import { ExpLogo } from "@/components/exp-logo";
 import { home } from "@/constants/urls";
-import { UserMenu } from "./user-menu";
+import { UserMenuHydration } from "@/features/header/components/user-menu-hydration";
 
 export async function Header() {
   return (
@@ -10,7 +10,7 @@ export async function Header() {
       <CenteredLayout>
         <div className="flex h-20 items-center justify-between">
           <Logo />
-          <UserMenu />
+          <UserMenuHydration />
         </div>
       </CenteredLayout>
     </header>
