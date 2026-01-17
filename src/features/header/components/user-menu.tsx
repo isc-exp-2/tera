@@ -13,8 +13,15 @@ import { useSelf } from "@/features/user/hooks/use-self";
 import { logOut } from "@/features/user/log-out";
 import { useDepartmentByIdQuery } from "@/features/user/queries/use-department-by-id-query";
 
+const nemu = (label: string, value: React.ReactNode) => (
+  <DropdownMenuLabel>
+    <p className="text-gray-500 text-xs">{label}</p>
+    <span className="rounded py-1 text-black text-sm">{value}</span>
+  </DropdownMenuLabel>
+);
+
 export function UserMenu() {
-  const self = useSelf(true);
+  const self = useSelf();
   const department = useDepartmentByIdQuery(self.departmentId);
 
   return (
@@ -27,37 +34,15 @@ export function UserMenu() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56 font-normal font-sans">
-        <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">氏名</p>
+        {nemu("氏名", `${self.lastName} ${self.firstName}`)}
 
-          <span className="rounded py-1 text-black text-sm">
-            {self.lastName} {self.firstName}
-          </span>
-        </DropdownMenuLabel>
+        {nemu("メールアドレス", <span className="text-xs">{self.email}</span>)}
 
-        <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">メールアドレス</p>
-          <span className="rounded py-1 text-black text-xs">{self.email}</span>
-        </DropdownMenuLabel>
+        {nemu("入学年度", `${self.enrollmentYear}年`)}
 
-        <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">入学年度</p>
-          <span className="rounded py-1 text-black text-sm">
-            {self.enrollmentYear}年
-          </span>
-        </DropdownMenuLabel>
+        {nemu("学科", department.data?.name)}
 
-        <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">学科</p>
-          <span className="rounded py-1 text-black text-sm">
-            {department.data?.name}
-          </span>
-        </DropdownMenuLabel>
-
-        <DropdownMenuLabel>
-          <p className="text-gray-500 text-xs">権限</p>
-          <span className="rounded py-1 text-black text-sm">{self.role}</span>
-        </DropdownMenuLabel>
+        {nemu("権限", self.role)}
 
         <DropdownMenuSeparator />
 
