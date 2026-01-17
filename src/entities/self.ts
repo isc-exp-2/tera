@@ -24,6 +24,20 @@ export const FirstName = v.pipe(
 
 export type FirstName = v.InferOutput<typeof FirstName>;
 
+export const EnrollmentYear = v.pipe(
+  v.number(),
+  v.minValue(1, "入学年度を選択してください"),
+);
+
+export type EnrollmentYear = v.InferOutput<typeof EnrollmentYear>;
+
+export const DepartmentId = v.pipe(
+  v.string(),
+  v.minLength(1, "学科を選択してください"),
+);
+
+export type Department = v.InferOutput<typeof DepartmentId>;
+
 export const UserInfo = v.object({
   /**
    * 名前（姓）
@@ -38,9 +52,9 @@ export const UserInfo = v.object({
   /**
    * 入学年度
    */
-  enrollmentYear: v.number(),
+  enrollmentYear: EnrollmentYear,
 
-  departmentId: v.string(),
+  departmentId: DepartmentId,
 
   role: RoleSchema,
 });
