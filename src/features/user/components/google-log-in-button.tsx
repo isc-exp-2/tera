@@ -2,11 +2,9 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { googleLoginAllowedDomain } from "@/constants";
+import { googleLoginAllowedDomain, urls } from "@/constants";
 import { logIn } from "@/features/user/log-in";
 import { firebaseClientAuth } from "@/firebase/client";
-import { urls } from "@/constants";
-
 
 export function GoogleLogInButton() {
   const router = useRouter();
@@ -23,7 +21,6 @@ export function GoogleLogInButton() {
     const idToken = await cred.user.getIdToken();
     await logIn(idToken);
     router.push(urls.home);
-
   }
 
   return (
