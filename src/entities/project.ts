@@ -14,7 +14,7 @@ export type ProjectName = v.InferOutput<typeof ProjectName>;
 
 export const ProjectExpense = v.pipe(
   v.number(),
-  v.minValue(0, "交通費は0以上で入力してください。"),
+  v.minValue(1, "交通費は1以上で入力してください。"),
 );
 
 export type ProjectExpense = v.InferOutput<typeof ProjectExpense>;
@@ -25,9 +25,9 @@ export type ProjectStatusSchema = v.InferOutput<typeof ProjectStatusSchema>;
 
 export const Project = v.object({
   id: v.string(),
-  name: v.pipe(v.string(), v.nonEmpty()),
-  status: v.enum(ProjectStatus),
-  expense: v.number(),
+  name: ProjectName,
+  status: ProjectStatusSchema,
+  expense: ProjectExpense,
   createdBy: v.string(),
   createdAt: v.date(),
 });
