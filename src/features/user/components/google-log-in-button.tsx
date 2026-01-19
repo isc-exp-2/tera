@@ -1,10 +1,10 @@
 "use client";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { googleLoginAllowedDomain } from "@/constants";
 import { logIn } from "@/features/user/log-in";
 import { firebaseClientAuth } from "@/firebase/client";
-import { useRouter } from "next/navigation";
 
 export function GoogleLogInButton() {
   const router = useRouter();
