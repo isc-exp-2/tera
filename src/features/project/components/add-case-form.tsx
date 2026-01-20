@@ -27,9 +27,9 @@ import {
 } from "@/entities/project";
 import { createProject } from "@/features/project/create-project";
 import { useFormValue } from "@/hooks/useFormValue";
-import { toHalfWidth } from "../utils/to-half-width";
+import { toHalfWidth } from "../../../lib/to-half-width";
 
-export function CaseManagementPage() {
+export function AddCaseForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [projectName, setProjectName, projectNameError, resetProjectName] =
     useFormValue("", ProjectName);
@@ -38,7 +38,7 @@ export function CaseManagementPage() {
     setProjectExpense,
     projectExpenseError,
     resetProjectExpense,
-  ] = useFormValue(0, ProjectExpense);
+  ] = useFormValue("", ProjectExpense);
   const [status, setStatus, statusError, resetStatus] = useFormValue(
     ProjectStatus.Exp,
     ProjectStatusSchema,
@@ -54,7 +54,7 @@ export function CaseManagementPage() {
     if ((e.nativeEvent as InputEvent).isComposing) return;
 
     const normalizedValue = toHalfWidth(e.target.value);
-    setProjectExpense(Number(normalizedValue) || 0);
+    setProjectExpense(normalizedValue);
   };
 
   const [isSubmitting, setSubmitting] = useState(false);
@@ -84,7 +84,7 @@ export function CaseManagementPage() {
         </DialogTrigger>
       </div>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle className="text-xl">案件を追加</DialogTitle>
         </DialogHeader>
@@ -108,7 +108,7 @@ export function CaseManagementPage() {
                 交通費金額（円）<span className="text-red-500">*</span>
               </Label>
               <Input
-                value={projectExpense === 0 ? "" : String(projectExpense)}
+                value={projectExpense}
                 onChange={handleChange}
                 placeholder="例: 200"
               />
@@ -159,7 +159,8 @@ export function CaseManagementPage() {
                 !projectName ||
                 !projectExpense ||
                 !!projectNameError ||
-                !!projectExpenseError
+                !!projectExpenseError ||
+                !!statusError
               }
             >
               <Save />
