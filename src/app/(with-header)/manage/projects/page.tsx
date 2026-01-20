@@ -1,5 +1,5 @@
-import { AddCaseForm } from "@/features/project/components/add-case-form";
+import { AddpProjectForm } from "@/features/project/components/add-project-form";
 
 export default function () {
-  return <AddCaseForm />;
+  return <AddpProjectForm />;
 }

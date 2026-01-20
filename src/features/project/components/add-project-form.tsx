@@ -29,7 +29,7 @@ import { createProject } from "@/features/project/create-project";
 import { useFormValue } from "@/hooks/useFormValue";
 import { toHalfWidth } from "../../../lib/to-half-width";
 
-export function AddCaseForm() {
+export function AddpProjectForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [projectName, setProjectName, projectNameError, resetProjectName] =
     useFormValue("", ProjectName);
@@ -38,7 +38,7 @@ export function AddCaseForm() {
     setProjectExpense,
     projectExpenseError,
     resetProjectExpense,
-  ] = useFormValue("", ProjectExpense);
+  ] = useFormValue<string | number>("", ProjectExpense);
   const [status, setStatus, statusError, resetStatus] = useFormValue(
     ProjectStatus.Exp,
     ProjectStatusSchema,
@@ -67,7 +67,7 @@ export function AddCaseForm() {
     await createProject({
       name: projectName,
       status,
-      expense: projectExpense,
+      expense: Number(projectExpense),
     });
     resetForm();
     setIsOpen(false);

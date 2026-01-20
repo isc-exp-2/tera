@@ -1,4 +1,3 @@
-import { minLength } from "valibot";
 import v from "@/entities/valibot";
 
 export enum ProjectStatus {
@@ -14,8 +13,10 @@ export const ProjectName = v.pipe(
 export type ProjectName = v.InferOutput<typeof ProjectName>;
 
 export const ProjectExpense = v.pipe(
-  v.string(),
-  v.minLength(1, "交通費は1以上で入力してください。"),
+  v.union([v.string(), v.number()]),
+  v.transform((value) => Number(value)),
+  v.number(),
+  v.minValue(1, "交通費は1以上で入力してください。"),
 );
 
 export type ProjectExpense = v.InferOutput<typeof ProjectExpense>;
