@@ -13,8 +13,6 @@ export const ProjectName = v.pipe(
 export type ProjectName = v.InferOutput<typeof ProjectName>;
 
 export const ProjectExpense = v.pipe(
-  v.union([v.string(), v.number()]),
-  v.transform((value) => Number(value)),
   v.number(),
   v.minValue(1, "交通費は1以上で入力してください。"),
 );

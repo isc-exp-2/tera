@@ -29,7 +29,7 @@ import { createProject } from "@/features/project/create-project";
 import { useFormValue } from "@/hooks/useFormValue";
 import { toHalfWidth } from "../../../lib/to-half-width";
 
-export function AddpProjectForm() {
+export function AddProjectForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [projectName, setProjectName, projectNameError, resetProjectName] =
     useFormValue("", ProjectName);
@@ -54,7 +54,8 @@ export function AddpProjectForm() {
     if ((e.nativeEvent as InputEvent).isComposing) return;
 
     const normalizedValue = toHalfWidth(e.target.value);
-    setProjectExpense(normalizedValue);
+    const parsed = Number(normalizedValue);
+    setProjectExpense(Number.isNaN(parsed) ? "" : parsed);
   };
 
   const [isSubmitting, setSubmitting] = useState(false);
@@ -67,7 +68,7 @@ export function AddpProjectForm() {
     await createProject({
       name: projectName,
       status,
-      expense: Number(projectExpense),
+      expense: Number(projectExpense) || 0,
     });
     resetForm();
     setIsOpen(false);
