@@ -1,11 +1,14 @@
 "use client";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { googleLoginAllowedDomain } from "@/constants";
+import { googleLoginAllowedDomain, urls } from "@/constants";
 import { logIn } from "@/features/user/log-in";
 import { firebaseClientAuth } from "@/firebase/client";
 
 export function GoogleLogInButton() {
+  const router = useRouter();
+
   async function onClick() {
     const googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({
@@ -17,6 +20,7 @@ export function GoogleLogInButton() {
     const cred = await signInWithPopup(firebaseClientAuth, googleProvider);
     const idToken = await cred.user.getIdToken();
     await logIn(idToken);
+    router.push(urls.home);
   }
 
   return (
