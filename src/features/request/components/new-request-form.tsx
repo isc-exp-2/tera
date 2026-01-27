@@ -14,8 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { NewRequestFormCalender } from "./new-request-form-calender";
-import type { useNewRequestForm } from "./use-new-request-form";
+import type { useNewRequestForm } from "../hook/use-new-request-form";
+import { NewRequestFormCalendar } from "./new-request-form-calendar";
 export function NewRequestForm({
   onSuccess,
   form,
@@ -57,7 +57,7 @@ export function NewRequestForm({
 
       <div className="space-y-2">
         <FormLabel required>日程</FormLabel>
-        <NewRequestFormCalender value={form.date} onChange={form.setDate} />
+        <NewRequestFormCalendar value={form.date} onChange={form.setDate} />
         {form.errors.dateError && (
           <p className="text-red-500 text-sm">{form.errors.dateError}</p>
         )}

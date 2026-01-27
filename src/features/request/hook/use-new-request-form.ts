@@ -9,29 +9,12 @@ const projectIdSchema = v.pipe(
   v.minLength(1, "案件を選択してください"),
 );
 
-const dateSchema = v.pipe(v.string(), v.minLength(8, "日付を入力してください"));
+const dateSchema = v.pipe(
+  v.date("日付を入力してください"),
+  v.check((d) => !Number.isNaN(d.getTime()), "存在しない日付です"),
+);
 
 const memoSchema = v.string();
-
-function digitsToDate(digits: string): Date | null {
-  if (!/^\d{8}$/.test(digits)) return null;
-
-  const y = Number(digits.slice(0, 4));
-  const m = Number(digits.slice(4, 6));
-  const d = Number(digits.slice(6, 8));
-
-  const date = new Date(y, m - 1, d);
-
-  if (
-    date.getFullYear() !== y ||
-    date.getMonth() !== m - 1 ||
-    date.getDate() !== d
-  ) {
-    return null;
-  }
-
-  return date;
-}
 
 export function useNewRequestForm(onSuccess: () => void) {
   const [open, setOpen] = useState(false);
@@ -50,7 +33,10 @@ export function useNewRequestForm(onSuccess: () => void) {
     "",
     projectIdSchema,
   );
-  const [date, setDate, dateError, dateReset] = useFormValue("", dateSchema);
+  const [date, setDate, dateError, dateReset] = useFormValue(
+    new Date(),
+    dateSchema,
+  );
   const [memo, setMemo] = useFormValue("", memoSchema);
 
   const selectedProject = projects.data?.find((p) => p.id === projectId);
@@ -58,7 +44,7 @@ export function useNewRequestForm(onSuccess: () => void) {
   const submit = () => {
     if (!canSubmit) return;
     createRequestMutation.mutate(
-      { projectId, date: parsedDate, memo },
+      { projectId, date, memo },
       {
         onSuccess: () => {
           onSuccess();
@@ -67,18 +53,18 @@ export function useNewRequestForm(onSuccess: () => void) {
       },
     );
   };
-  function formatDate(date: string) {
-    const y = date.slice(0, 4);
-    const m = date.slice(4, 6);
-    const d = date.slice(6, 8);
+  function formatDate(date: Date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+
     return `${y}年${m}月${d}日`;
   }
-  const parsedDate = digitsToDate(date);
 
   const canSubmit =
     !!projectId &&
     !!selectedProject?.expense &&
-    !!parsedDate &&
+    !!date &&
     !projectError &&
     !dateError;
 
