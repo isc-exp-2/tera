@@ -1,7 +1,5 @@
-import { AddProjectForm } from "@/features/project/components/add-project-form";
-import { ProjectManagePage } from "@/features/project/components/project-manage-page";
+import { ProjectPageContent } from "@/features/project/components/project-page-content";
 
 export default function () {
-  return <ProjectManagePage />;
-  // <AddProjectForm />;
+  return <ProjectPageContent />;
 }

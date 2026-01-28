@@ -1,6 +1,6 @@
 "use client";
 import { useQueryClient } from "@tanstack/react-query";
-import { Save } from "lucide-react";
+import { Pen, Save } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,27 +22,32 @@ import {
 } from "@/components/ui/select";
 import { queryKeys } from "@/constants";
 import {
+  type Project,
   ProjectExpense,
   ProjectName,
   ProjectStatus,
   ProjectStatusSchema,
 } from "@/entities/project";
-import { createProject } from "@/features/project/create-project";
 import { useFormValue } from "@/hooks/useFormValue";
 import { toHalfWidth } from "../../../lib/to-half-width";
+import { useUpdateProjectByIdMutation } from "../mutations/use-update-project-mutation";
 
-export function AddProjectForm() {
+type UpdateProjectFormProps = {
+  project: Project;
+};
+
+export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [projectName, setProjectName, projectNameError, resetProjectName] =
-    useFormValue("", ProjectName);
+    useFormValue(project.name, ProjectName);
   const [
     projectExpense,
     setProjectExpense,
     projectExpenseError,
     resetProjectExpense,
-  ] = useFormValue<string | number>("", ProjectExpense);
+  ] = useFormValue<string | number>(project.expense, ProjectExpense);
   const [status, setStatus, statusError, resetStatus] = useFormValue(
-    ProjectStatus.Exp,
+    project.status,
     ProjectStatusSchema,
   );
 
@@ -51,6 +56,8 @@ export function AddProjectForm() {
     resetProjectExpense();
     resetStatus();
   }
+
+  const mutation = useUpdateProjectByIdMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if ((e.nativeEvent as InputEvent).isComposing) return;
@@ -67,31 +74,28 @@ export function AddProjectForm() {
     e.preventDefault();
 
     setSubmitting(true);
-
-    await createProject({
-      name: projectName,
-      status,
-      expense: Number(projectExpense) || 0,
+    await mutation.mutateAsync({
+      id: project.id,
+      data: {
+        name: projectName,
+        status,
+        expense: Number(projectExpense) || 0,
+      },
     });
     queryClient.invalidateQueries({ queryKey: queryKeys.projects });
-    resetForm();
     setIsOpen(false);
     setSubmitting(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex justify-end">
-        <DialogTrigger asChild>
-          <Button className="bg-indigo-600 px-6 py-2 text-white">
-            ＋ 案件を追加
-          </Button>
-        </DialogTrigger>
-      </div>
+      <DialogTrigger asChild>
+        <Pen className="h-4 w-4 text-indigo-600" />
+      </DialogTrigger>
 
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle className="text-xl">案件を追加</DialogTitle>
+          <DialogTitle className="text-xl">案件を編集</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
@@ -169,7 +173,7 @@ export function AddProjectForm() {
               }
             >
               <Save />
-              追加
+              更新
             </Button>
           </div>
         </form>
