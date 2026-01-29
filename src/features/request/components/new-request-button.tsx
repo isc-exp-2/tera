@@ -1,6 +1,6 @@
 "use client";
 
-import { useNewRequestForm } from "../hook/use-new-request-form";
+import { useNewRequestForm } from "../hooks/use-new-request-form";
 import { NewRequestConfirmForm } from "./new-request-confirm-dialog";
 import { NewRequestDialog } from "./new-request-dialog";
 export function NewRequestButton() {

@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { useNewRequestForm } from "../hook/use-new-request-form";
+import type { useNewRequestForm } from "../hooks/use-new-request-form";
 import { NewRequestForm } from "./new-request-form";
 export function NewRequestDialog({
   open,

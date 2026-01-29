@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import type { useNewRequestForm } from "../hook/use-new-request-form";
+import type { useNewRequestForm } from "../hooks/use-new-request-form";
 import { NewRequestFormCalendar } from "./new-request-form-calendar";
 export function NewRequestForm({
   onSuccess,
@@ -67,8 +67,9 @@ export function NewRequestForm({
         <FormLabel required>金額（円）</FormLabel>
         <Input
           className="w-full bg-gray-100"
-          readOnly
-          value={form.expense ?? "案件を選択すると自動的に表示されます"}
+          disabled
+          placeholder="案件を選択すると自動的に表示されます"
+          value={form.expense ?? ""}
         />
       </div>
 

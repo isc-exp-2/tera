@@ -98,7 +98,15 @@ export function NewRequestFormCalendar({ value, onChange }: Props) {
   );
 }
 
-// function InValDateSegments(inputRef: React.RefObject<HTMLInputElement | null>) {
+// ここから下の関数はすべて<Input>用の操作関数です
+
+/**
+ *<Input>内で year/month/day をそれぞれをセグメントとしてまとめる
+ そのまとめたセグメントの表示や移動の操作をする
+ * @param inputRef
+ * @param value
+ * @returns
+ */
 function InValDateSegments(
   inputRef: React.RefObject<HTMLInputElement | null>,
   value?: Date,
@@ -112,6 +120,8 @@ function InValDateSegments(
       });
     }
   }, [value]);
+
+  // セグメントの設定（名前、幅、開始地点、中身）
   type Segment = "year" | "month" | "day";
 
   const segmentOrder: Segment[] = ["year", "month", "day"];
@@ -130,6 +140,7 @@ function InValDateSegments(
 
   const [segmentPoint, setSegmentPoint] = useState<Segment>("year");
 
+  // year/month/dayに今保存されているdateを合わせる
   const getValue = () =>
     `${segmentData.year}/${segmentData.month}/${segmentData.day}`;
 
@@ -141,6 +152,7 @@ function InValDateSegments(
     });
   };
 
+  // 選択しているセグメントを囲んで光らせる
   const highlight = (seg: Segment) => {
     const el = inputRef.current;
     if (!el) return;
@@ -153,6 +165,7 @@ function InValDateSegments(
     requestAnimationFrame(() => highlight(seg));
   };
 
+  // セグメント間の移動設定
   const nextSegments = Object.fromEntries(
     segmentOrder.map((seg, i) => [seg, segmentOrder[i + 1] ?? null]),
   ) as Record<Segment, Segment | null>;
@@ -171,6 +184,7 @@ function InValDateSegments(
     forceHighlight(next);
   }
 
+  // クリック時にセグメントの位置をクリックされたセグメントに切り替える
   function clickSegmentPoint(pos: number) {
     const seg = segmentOrder.find((s) => {
       const { from, length } = segmentConfig[s];
@@ -198,20 +212,26 @@ function InValDateSegments(
     setSegmentPoint,
   };
 }
-
+/**
+ *<Input>内で選択されているセグメントでのデータ入力操作をまとめているコード
+ * @param seg
+ * @param onChange
+ * @returns
+ */
 function DateValueEditor(
   seg: ReturnType<typeof InValDateSegments>,
   onChange?: (d: Date) => void,
 ) {
   const [offset, setOffset] = useState(0);
   const [completed, setCompleted] = useState({
-    year: false,
-    month: false,
-    day: false,
+    year: true,
+    month: true,
+    day: true,
   });
 
   const segmentLength = { year: 4, month: 2, day: 2 };
 
+  // 入力されたデータが正しい（存在する）か確認する
   const isValidDate = (y: number, m: number, d: number) => {
     const dt = new Date(y, m - 1, d);
     return (
@@ -219,6 +239,7 @@ function DateValueEditor(
     );
   };
 
+  // 入力されたデータをStateに保存する
   const applySegments = (nextSegments: typeof seg.segmentData) => {
     seg.setSegmentData(nextSegments);
 
@@ -231,14 +252,17 @@ function DateValueEditor(
     }
   };
 
+  // 選択したセグメントの値を0に置き換える
   const resetSegment = (seglength: number) => "0".repeat(seglength);
 
+  // 選択したセグメントにデータを入力する（置き換え+左シフト）
   function inputDate(digit: string) {
     const segKey = seg.segmentPoint;
     const len = segmentLength[segKey];
 
     let value = seg.segmentData[segKey];
 
+    // 一度入力済みの場合値を一回リセットする[ 2021 -> 1入力 -> 0001]
     if (completed[segKey]) {
       value = "0".repeat(len);
       setCompleted((c) => ({ ...c, [segKey]: false }));
@@ -253,6 +277,7 @@ function DateValueEditor(
       [segKey]: nextValue,
     });
 
+    // セグメントの最後まで入力したら次のセグメントに移動する（年 -> 月 -> 日）
     if (nextOffset >= len) {
       setCompleted((c) => ({ ...c, [segKey]: true }));
       setOffset(0);
@@ -263,6 +288,7 @@ function DateValueEditor(
     }
   }
 
+  // 選択されたセグメントのデータを削除（すべて0置き換え）する
   function backspaceOrDelete() {
     const zero = resetSegment(seg.segmentConfig[seg.segmentPoint].length);
     const nextSegments = { ...seg.segmentData, [seg.segmentPoint]: zero };

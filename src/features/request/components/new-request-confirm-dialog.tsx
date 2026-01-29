@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import type { useNewRequestForm } from "../hook/use-new-request-form";
+import type { useNewRequestForm } from "../hooks/use-new-request-form";
 export function NewRequestConfirmForm({
   open,
   onOpenChange,
