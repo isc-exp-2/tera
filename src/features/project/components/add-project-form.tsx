@@ -1,5 +1,4 @@
 "use client";
-import { useQueryClient } from "@tanstack/react-query";
 import { Save } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,16 +19,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { queryKeys } from "@/constants";
 import {
   ProjectExpense,
   ProjectName,
   ProjectStatus,
   ProjectStatusSchema,
 } from "@/entities/project";
-import { createProject } from "@/features/project/create-project";
 import { useFormValue } from "@/hooks/useFormValue";
 import { toHalfWidth } from "../../../lib/to-half-width";
+import { useCreateProjectMutation } from "../mutations/use-create-project-mutation";
 
 export function AddProjectForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,19 +59,18 @@ export function AddProjectForm() {
   };
 
   const [isSubmitting, setSubmitting] = useState(false);
-  const queryClient = useQueryClient();
+  const mutation = useCreateProjectMutation();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     setSubmitting(true);
 
-    await createProject({
+    await mutation.mutateAsync({
       name: projectName,
       status,
       expense: Number(projectExpense) || 0,
     });
-    queryClient.invalidateQueries({ queryKey: queryKeys.projects });
     resetForm();
     setIsOpen(false);
     setSubmitting(false);

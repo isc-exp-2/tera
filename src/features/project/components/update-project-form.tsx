@@ -1,5 +1,4 @@
 "use client";
-import { useQueryClient } from "@tanstack/react-query";
 import { Pen, Save } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { queryKeys } from "@/constants";
 import {
   type Project,
   ProjectExpense,
@@ -68,7 +66,6 @@ export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
   };
 
   const [isSubmitting, setSubmitting] = useState(false);
-  const queryClient = useQueryClient();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -82,14 +79,13 @@ export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
         expense: Number(projectExpense) || 0,
       },
     });
-    queryClient.invalidateQueries({ queryKey: queryKeys.projects });
     setIsOpen(false);
     setSubmitting(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="cursor-pointer">
         <Pen className="h-4 w-4 text-indigo-600" />
       </DialogTrigger>
 

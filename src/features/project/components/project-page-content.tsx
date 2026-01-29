@@ -9,34 +9,52 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ProjectStatus } from "@/entities/project";
+import { RequestStatus } from "@/entities/request";
 import { AddProjectForm } from "@/features/project/components/add-project-form";
+import { useRequests } from "@/features/request/queries/use-requests";
 import { useProjectsQuery } from "../queries/use-projects-query";
 import { UpdateProjectForm } from "./update-project-form";
 
 export function ProjectPageContent() {
   const projects = useProjectsQuery().data ?? [];
 
-  const expProjects = projects.filter((project) => project.status === "exp");
+  const expProjects = projects.filter(
+    (project) => project.status === ProjectStatus.Exp,
+  );
   const externalProjects = projects.filter(
-    (project) => project.status === "external",
+    (project) => project.status === ProjectStatus.External,
   );
-  const expTotal = expProjects.reduce(
-    (acc, project) => acc + project.expense,
-    0,
-  );
+
+  const requests = useRequests().data ?? [];
+
+  const expTotal = requests
+    .filter((request) => request.status === RequestStatus.Paid)
+    .filter((request) => {
+      const project = projects.find(
+        (project) => project.id === request.projectId,
+      );
+      return project?.status === ProjectStatus.Exp;
+    })
+    .reduce((acc, request) => {
+      const project = projects.find(
+        (project) => project.id === request.projectId,
+      );
+      return acc + (project ? project.expense : 0);
+    }, 0);
 
   return (
     <>
       <p className="my-4">案件統計</p>
       <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4">
-        <StatsCard title="登録案件数" count={projects.length} label="件" />
-        <StatsCard title="EXP.案件" count={expProjects.length} label="件" />
-        <StatsCard
+        <StatusCard title="登録案件数" count={projects.length} label="件" />
+        <StatusCard title="EXP.案件" count={expProjects.length} label="件" />
+        <StatusCard
           title="外部案件"
           count={externalProjects.length}
           label="件"
         />
-        <StatsCard title="EXP.合計金額" count={expTotal} label="円" />
+        <StatusCard title="EXP.合計金額" count={expTotal} label="円" />
       </div>
       <div className="my-8 rounded-lg border border-blue-200 bg-blue-50 p-6 text-left text-blue-900 text-sm">
         <p className="mb-1.5">案件について</p>
@@ -70,12 +88,14 @@ export function ProjectPageContent() {
               <TableCell className="py-4">
                 <Badge
                   className={
-                    project.status === "external"
+                    project.status === ProjectStatus.External
                       ? "bg-sky-50 p-3 text-sky-700 dark:bg-sky-950 dark:text-sky-300"
                       : "bg-purple-50 p-3 text-purple-700 dark:bg-purple-950 dark:text-purple-300"
                   }
                 >
-                  {project.status === "external" ? "外部案件" : "EXP."}
+                  {project.status === ProjectStatus.External
+                    ? "外部案件"
+                    : "EXP."}
                 </Badge>
               </TableCell>
               <TableCell className="py-4">{project.createdBy}</TableCell>
@@ -93,13 +113,13 @@ export function ProjectPageContent() {
   );
 }
 
-type StatsCardProps = {
+type StatusCardProps = {
   title: string;
   count: number;
   label: string;
 };
 
-function StatsCard({ title, count, label }: StatsCardProps) {
+function StatusCard({ title, count, label }: StatusCardProps) {
   return (
     <Card className="max-w-sm">
       <CardHeader>
