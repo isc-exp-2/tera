@@ -1,6 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -17,7 +18,9 @@ import { useProjectsQuery } from "../queries/use-projects-query";
 import { UpdateProjectForm } from "./update-project-form";
 
 export function ProjectPageContent() {
-  const projects = useProjectsQuery().data ?? [];
+  const projectsQuery = useProjectsQuery();
+  const projects = projectsQuery.data ?? [];
+  const isProjectsPending = projectsQuery.isPending;
 
   const expProjects = projects.filter(
     (project) => project.status === ProjectStatus.Exp,
@@ -26,11 +29,13 @@ export function ProjectPageContent() {
     (project) => project.status === ProjectStatus.External,
   );
 
-  const requests = useRequests().data ?? [];
+  const requestsQuery = useRequests();
+  const requests = requestsQuery.data ?? [];
+  const isRequestsPending = requestsQuery.isPending;
 
   const expTotal = requests
-    .filter((request) => request.status === RequestStatus.Paid)
     .filter((request) => {
+      if (request.status !== RequestStatus.Paid) return false;
       const project = projects.find(
         (project) => project.id === request.projectId,
       );
@@ -47,14 +52,30 @@ export function ProjectPageContent() {
     <>
       <p className="my-4">案件統計</p>
       <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4">
-        <StatusCard title="登録案件数" count={projects.length} label="件" />
-        <StatusCard title="EXP.案件" count={expProjects.length} label="件" />
+        <StatusCard
+          title="登録案件数"
+          count={projects.length}
+          label="件"
+          skeleton={isProjectsPending}
+        />
+        <StatusCard
+          title="EXP.案件"
+          count={expProjects.length}
+          label="件"
+          skeleton={isProjectsPending}
+        />
         <StatusCard
           title="外部案件"
           count={externalProjects.length}
           label="件"
+          skeleton={isProjectsPending}
         />
-        <StatusCard title="EXP.合計金額" count={expTotal} label="円" />
+        <StatusCard
+          title="EXP.合計金額"
+          count={expTotal}
+          label="円"
+          skeleton={isRequestsPending}
+        />
       </div>
       <div className="my-8 rounded-lg border border-blue-200 bg-blue-50 p-6 text-left text-blue-900 text-sm">
         <p className="mb-1.5">案件について</p>
@@ -117,18 +138,23 @@ type StatusCardProps = {
   title: string;
   count: number;
   label: string;
+  skeleton?: boolean;
 };
 
-function StatusCard({ title, count, label }: StatusCardProps) {
+function StatusCard({ title, count, label, skeleton }: StatusCardProps) {
   return (
     <Card className="max-w-sm">
       <CardHeader>
         <CardTitle className="text-sm">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="text-2xl">
-        {count}
-        {label}
-      </CardContent>
+      {skeleton ? (
+        <Skeleton className="h-10 w-40 rounded-md" />
+      ) : (
+        <CardContent className="text-2xl">
+          {count}
+          {label}
+        </CardContent>
+      )}
     </Card>
   );
 }
