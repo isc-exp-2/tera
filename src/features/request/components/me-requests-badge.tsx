@@ -22,28 +22,30 @@ const BADGES: { label: string; value: RequestStatus }[] = [
 type Props = {
   value: RequestStatus;
   onChange: (value: RequestStatus) => void;
+  counts: Record<RequestStatus, number>;
 };
 
-export function MeRequestsBadge({ value, onChange }: Props) {
+export function MeRequestsBadge({ value, onChange, counts }: Props) {
   return (
     <>
       {/* PC: バッジ */}
       <div className="hidden flex-wrap gap-3 sm:flex">
         {BADGES.map(({ label, value: v }) => {
           const isActive = value === v;
+          const count = counts[v] ?? 0;
 
           return (
             <Badge
               key={v}
               onClick={() => onChange(v)}
               className={cn(
-                "cursor-pointer rounded-xl px-3 py-2 text-sm transition-colors",
+                "cursor-pointer rounded-xl px-3 py-6 text-lg transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
                   : "border border-gray-300 bg-white text-gray-800 hover:bg-gray-100",
               )}
             >
-              {label}
+              {label} ({count})
             </Badge>
           );
         })}
@@ -59,7 +61,7 @@ export function MeRequestsBadge({ value, onChange }: Props) {
           <SelectContent>
             {BADGES.map(({ label, value }) => (
               <SelectItem key={value} value={value}>
-                {label}
+                {label} ({counts[value] ?? 0})
               </SelectItem>
             ))}
           </SelectContent>

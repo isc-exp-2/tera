@@ -129,7 +129,7 @@ export function useMeRequestTable() {
   const projectsQuery = useProjectsQuery();
   const self = useSelf();
 
-  const data = useMemo<RequestWithProject[]>(() => {
+  const allData = useMemo<RequestWithProject[]>(() => {
     if (!requestsQuery.data || !projectsQuery.data || !self) {
       return [];
     }
@@ -143,7 +143,7 @@ export function useMeRequestTable() {
 
     const requesterName = `${self.lastName} ${self.firstName}`;
 
-    const joined = requestsQuery.data
+    return requestsQuery.data
       .map((req): RequestWithProject | null => {
         const project = projectMap.get(req.projectId);
         if (!project) return null;
@@ -159,13 +159,12 @@ export function useMeRequestTable() {
         };
       })
       .filter((row): row is RequestWithProject => row !== null);
+  }, [requestsQuery.data, projectsQuery.data, self]);
 
-    if (status === "all") {
-      return joined;
-    }
-
-    return joined.filter((row) => row.status === status);
-  }, [requestsQuery.data, projectsQuery.data, self, status]);
+  const filteredData = useMemo(() => {
+    if (status === "all") return allData;
+    return allData.filter((row) => row.status === status);
+  }, [allData, status]);
 
   const deleteMutation = useDeleteMyRequestByIdMutation();
 
@@ -177,7 +176,8 @@ export function useMeRequestTable() {
   return {
     status,
     setStatus,
-    data,
+    allData,
+    data: filteredData,
     isLoading: requestsQuery.isLoading || projectsQuery.isLoading,
     error: requestsQuery.error || projectsQuery.error,
     deleteRequest,
