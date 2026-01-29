@@ -1,5 +1,5 @@
-import { NewRequestButton } from "@/features/request/components/new-request-button";
+import { MeRequestsFormat } from "@/features/request/components/me-requests-format";
 
 export default function () {
-  return <NewRequestButton />;
+  return <MeRequestsFormat />;
 }
