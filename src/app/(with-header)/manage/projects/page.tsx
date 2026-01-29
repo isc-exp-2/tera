@@ -1,5 +1,5 @@
-import { AddProjectForm } from "@/features/project/components/add-project-form";
+import { ProjectPageContent } from "@/features/project/components/project-page-content";
 
 export default function () {
-  return <AddProjectForm />;
+  return <ProjectPageContent />;
 }
