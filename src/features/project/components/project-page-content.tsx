@@ -18,9 +18,8 @@ import { useProjectsQuery } from "../queries/use-projects-query";
 import { UpdateProjectForm } from "./update-project-form";
 
 export function ProjectPageContent() {
-  const projectsQuery = useProjectsQuery();
-  const projects = projectsQuery.data ?? [];
-  const isProjectsPending = projectsQuery.isPending;
+  const { data: projects = [], isPending: isProjectsPending } =
+    useProjectsQuery();
 
   const expProjects = projects.filter(
     (project) => project.status === ProjectStatus.Exp,
@@ -29,9 +28,7 @@ export function ProjectPageContent() {
     (project) => project.status === ProjectStatus.External,
   );
 
-  const requestsQuery = useRequests();
-  const requests = requestsQuery.data ?? [];
-  const isRequestsPending = requestsQuery.isPending;
+  const { data: requests = [], isPending: isRequestsPending } = useRequests();
 
   const expTotal = requests
     .filter((request) => {
