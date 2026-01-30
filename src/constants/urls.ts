@@ -1,4 +1,4 @@
-export const home = "/home";
+export const home = "/";
 
 export const onboarding = "/onboarding";
 

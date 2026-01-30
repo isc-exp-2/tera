@@ -1,5 +1,5 @@
 "use client";
-import { Save } from "lucide-react";
+import { Pen, Save } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  type Project,
   ProjectExpense,
   ProjectName,
   ProjectStatus,
@@ -27,22 +28,28 @@ import {
 } from "@/entities/project";
 import { useFormValue } from "@/hooks/useFormValue";
 import { toHalfWidth } from "../../../lib/to-half-width";
-import { useCreateProjectMutation } from "../mutations/use-create-project-mutation";
+import { useUpdateProjectByIdMutation } from "../mutations/use-update-project-mutation";
 
-export function AddProjectForm() {
+type UpdateProjectFormProps = {
+  project: Project;
+};
+
+export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [projectName, setProjectName, projectNameError, resetProjectName] =
-    useFormValue("", ProjectName);
+    useFormValue(project.name, ProjectName);
   const [
     projectExpense,
     setProjectExpense,
     projectExpenseError,
     resetProjectExpense,
-  ] = useFormValue<string | number>("", ProjectExpense);
+  ] = useFormValue<string | number>(project.expense, ProjectExpense);
   const [status, setStatus, statusError, resetStatus] = useFormValue(
-    ProjectStatus.Exp,
+    project.status,
     ProjectStatusSchema,
   );
+  const mutation = useUpdateProjectByIdMutation();
+  const [isSubmitting, setSubmitting] = useState(false);
 
   function resetForm() {
     resetProjectName();
@@ -50,45 +57,39 @@ export function AddProjectForm() {
     resetStatus();
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if ((e.nativeEvent as InputEvent).isComposing) return;
 
     const normalizedValue = toHalfWidth(e.target.value);
     const parsed = Number(normalizedValue);
     setProjectExpense(Number.isNaN(parsed) ? "" : parsed);
-  };
-
-  const [isSubmitting, setSubmitting] = useState(false);
-  const mutation = useCreateProjectMutation();
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     setSubmitting(true);
-
     await mutation.mutateAsync({
-      name: projectName,
-      status,
-      expense: Number(projectExpense) || 0,
+      id: project.id,
+      data: {
+        name: projectName,
+        status,
+        expense: Number(projectExpense) || 0,
+      },
     });
-    resetForm();
     setIsOpen(false);
     setSubmitting(false);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex justify-end">
-        <DialogTrigger asChild>
-          <Button className="bg-indigo-600 px-6 py-2 text-white">
-            ＋ 案件を追加
-          </Button>
-        </DialogTrigger>
-      </div>
+      <DialogTrigger asChild className="cursor-pointer">
+        <Pen className="h-4 w-4 text-indigo-600" />
+      </DialogTrigger>
 
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle className="text-xl">案件を追加</DialogTitle>
+          <DialogTitle className="text-xl">案件を編集</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
@@ -166,7 +167,7 @@ export function AddProjectForm() {
               }
             >
               <Save />
-              追加
+              更新
             </Button>
           </div>
         </form>
