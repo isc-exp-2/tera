@@ -1,10 +1,12 @@
 "use client";
 
+import { CalendarDate, createCalendar } from "@internationalized/date";
 import { CalendarIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useDateField, useDateSegment } from "react-aria";
+import { useDateFieldState } from "react-stately";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -17,60 +19,53 @@ type Props = {
 };
 
 export function NewRequestFormCalendar({ value, onChange }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const seg = InValDateSegments(inputRef, value);
-
-  const val = DateValueEditor(seg, onChange);
-
   const [calOpen, setCalOpen] = useState(false);
+  const fieldRef = useRef<HTMLDivElement>(null);
+
+  const state = useDateFieldState({
+    value: value
+      ? new CalendarDate(
+          value.getFullYear(),
+          value.getMonth() + 1,
+          value.getDate(),
+        )
+      : null,
+
+    onChange: (d) => {
+      if (!d) return;
+      onChange?.(new Date(d.year, d.month - 1, d.day));
+    },
+
+    locale: "ja-JP",
+    createCalendar,
+  });
+
+  const { fieldProps } = useDateField(
+    { "aria-label": "日付" },
+    state,
+    fieldRef,
+  );
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative">
-        <Input
-          ref={inputRef}
-          value={seg.getValue()}
-          inputMode="numeric"
-          className="pr-10 font-mono"
-          onFocus={() => seg.forceHighlight("year")}
-          onChange={() => {}}
-          onClick={(e) => {
-            const pos = (e.target as HTMLInputElement).selectionStart ?? 0;
-            seg.clickSegmentPoint(pos);
-          }}
-          onKeyDown={(e) => {
-            if (/^[0-9]$/.test(e.key)) {
-              e.preventDefault();
-              val.inputDate(e.key);
-              return;
-            }
-
-            if (e.key === "Backspace" || e.key === "Delete") {
-              e.preventDefault();
-              val.backspaceOrDelete();
-              return;
-            }
-
-            if (e.key === "ArrowLeft") {
-              e.preventDefault();
-              seg.moveSegmentPoint("prev");
-              return;
-            }
-            if (e.key === "ArrowRight") {
-              e.preventDefault();
-              seg.moveSegmentPoint("next");
-              return;
-            }
-          }}
-        />
+      <div className="relative flex items-center">
+        <div
+          {...fieldProps}
+          ref={fieldRef}
+          className="flex w-full rounded-md border bg-background px-3 py-2 font-mono text-sm tabular-nums focus-within:ring-2 focus-within:ring-primary"
+        >
+          {state.segments.map((segment, i) => (
+            <DateSegment
+              key={`${segment.type}-${i}`}
+              segment={segment}
+              state={state}
+            />
+          ))}
+        </div>
 
         <Popover open={calOpen} onOpenChange={setCalOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              className="-translate-y-1/2 absolute top-1/2 right-2 size-6"
-            >
+            <Button variant="ghost" className="absolute right-2 size-6">
               <CalendarIcon className="size-4" />
             </Button>
           </PopoverTrigger>
@@ -82,11 +77,7 @@ export function NewRequestFormCalendar({ value, onChange }: Props) {
               captionLayout="dropdown"
               onSelect={(date) => {
                 if (!date) return;
-
                 onChange?.(date);
-                seg.getCalDate(date);
-                seg.forceHighlight("day");
-
                 setCalOpen(false);
               }}
               required={false}
@@ -98,205 +89,24 @@ export function NewRequestFormCalendar({ value, onChange }: Props) {
   );
 }
 
-// ここから下の関数はすべて<Input>用の操作関数です
+function DateSegment({ segment, state }: { segment: unknown; state: unknown }) {
+  const ref = useRef<HTMLSpanElement>(null);
 
-/**
- *<Input>内で year/month/day をそれぞれをセグメントとしてまとめる
- そのまとめたセグメントの表示や移動の操作をする
- * @param inputRef
- * @param value
- * @returns
- */
-function InValDateSegments(
-  inputRef: React.RefObject<HTMLInputElement | null>,
-  value?: Date,
-) {
-  useEffect(() => {
-    if (value) {
-      setSegmentData({
-        year: String(value.getFullYear()).padStart(4, "0"),
-        month: String(value.getMonth() + 1).padStart(2, "0"),
-        day: String(value.getDate()).padStart(2, "0"),
-      });
-    }
-  }, [value]);
+  const { segmentProps } = useDateSegment(
+    segment as Parameters<typeof useDateSegment>[0],
+    state as Parameters<typeof useDateSegment>[1],
+    ref,
+  );
 
-  // セグメントの設定（名前、幅、開始地点、中身）
-  type Segment = "year" | "month" | "day";
+  const text = (segment as { text?: string })?.text ?? "";
 
-  const segmentOrder: Segment[] = ["year", "month", "day"];
-
-  const segmentConfig: Record<Segment, { from: number; length: number }> = {
-    year: { from: 0, length: 4 },
-    month: { from: 5, length: 2 },
-    day: { from: 8, length: 2 },
-  };
-
-  const [segmentData, setSegmentData] = useState({
-    year: "0000",
-    month: "00",
-    day: "00",
-  });
-
-  const [segmentPoint, setSegmentPoint] = useState<Segment>("year");
-
-  // year/month/dayに今保存されているdateを合わせる
-  const getValue = () =>
-    `${segmentData.year}/${segmentData.month}/${segmentData.day}`;
-
-  const getCalDate = (date: Date) => {
-    setSegmentData({
-      year: String(date.getFullYear()).padStart(4, "0"),
-      month: String(date.getMonth() + 1).padStart(2, "0"),
-      day: String(date.getDate()).padStart(2, "0"),
-    });
-  };
-
-  // 選択しているセグメントを囲んで光らせる
-  const highlight = (seg: Segment) => {
-    const el = inputRef.current;
-    if (!el) return;
-
-    const { from, length } = segmentConfig[seg];
-    el.setSelectionRange(from, from + length);
-  };
-
-  const forceHighlight = (seg: Segment) => {
-    requestAnimationFrame(() => highlight(seg));
-  };
-
-  // セグメント間の移動設定
-  const nextSegments = Object.fromEntries(
-    segmentOrder.map((seg, i) => [seg, segmentOrder[i + 1] ?? null]),
-  ) as Record<Segment, Segment | null>;
-
-  const backSegments = Object.fromEntries(
-    segmentOrder.map((seg, i) => [seg, segmentOrder[i - 1] ?? null]),
-  ) as Record<Segment, Segment | null>;
-
-  function moveSegmentPoint(dir: "prev" | "next") {
-    const next =
-      dir === "next" ? nextSegments[segmentPoint] : backSegments[segmentPoint];
-
-    if (!next) return;
-
-    setSegmentPoint(next);
-    forceHighlight(next);
-  }
-
-  // クリック時にセグメントの位置をクリックされたセグメントに切り替える
-  function clickSegmentPoint(pos: number) {
-    const seg = segmentOrder.find((s) => {
-      const { from, length } = segmentConfig[s];
-      return pos >= from && pos < from + length;
-    });
-
-    if (!seg) return;
-
-    setSegmentPoint(seg);
-    forceHighlight(seg);
-  }
-
-  return {
-    segmentOrder,
-    segmentConfig,
-    segmentData,
-    segmentPoint,
-    getValue,
-    getCalDate,
-    highlight,
-    forceHighlight,
-    moveSegmentPoint,
-    clickSegmentPoint,
-    setSegmentData,
-    setSegmentPoint,
-  };
-}
-/**
- *<Input>内で選択されているセグメントでのデータ入力操作をまとめているコード
- * @param seg
- * @param onChange
- * @returns
- */
-function DateValueEditor(
-  seg: ReturnType<typeof InValDateSegments>,
-  onChange?: (d: Date) => void,
-) {
-  const [offset, setOffset] = useState(0);
-  const [completed, setCompleted] = useState({
-    year: true,
-    month: true,
-    day: true,
-  });
-
-  const segmentLength = { year: 4, month: 2, day: 2 };
-
-  // 入力されたデータが正しい（存在する）か確認する
-  const isValidDate = (y: number, m: number, d: number) => {
-    const dt = new Date(y, m - 1, d);
-    return (
-      dt.getFullYear() === y && dt.getMonth() + 1 === m && dt.getDate() === d
-    );
-  };
-
-  // 入力されたデータをStateに保存する
-  const applySegments = (nextSegments: typeof seg.segmentData) => {
-    seg.setSegmentData(nextSegments);
-
-    const y = Number(nextSegments.year);
-    const m = Number(nextSegments.month);
-    const d = Number(nextSegments.day);
-
-    if (isValidDate(y, m, d)) {
-      onChange?.(new Date(y, m - 1, d));
-    }
-  };
-
-  // 選択したセグメントの値を0に置き換える
-  const resetSegment = (seglength: number) => "0".repeat(seglength);
-
-  // 選択したセグメントにデータを入力する（置き換え+左シフト）
-  function inputDate(digit: string) {
-    const segKey = seg.segmentPoint;
-    const len = segmentLength[segKey];
-
-    let value = seg.segmentData[segKey];
-
-    // 一度入力済みの場合値を一回リセットする[ 2021 -> 1入力 -> 0001]
-    if (completed[segKey]) {
-      value = "0".repeat(len);
-      setCompleted((c) => ({ ...c, [segKey]: false }));
-      setOffset(0);
-    }
-
-    const nextValue = value.slice(1) + digit;
-    const nextOffset = offset + 1;
-
-    applySegments({
-      ...seg.segmentData,
-      [segKey]: nextValue,
-    });
-
-    // セグメントの最後まで入力したら次のセグメントに移動する（年 -> 月 -> 日）
-    if (nextOffset >= len) {
-      setCompleted((c) => ({ ...c, [segKey]: true }));
-      setOffset(0);
-      seg.moveSegmentPoint("next");
-    } else {
-      setOffset(nextOffset);
-      seg.forceHighlight(segKey);
-    }
-  }
-
-  // 選択されたセグメントのデータを削除（すべて0置き換え）する
-  function backspaceOrDelete() {
-    const zero = resetSegment(seg.segmentConfig[seg.segmentPoint].length);
-    const nextSegments = { ...seg.segmentData, [seg.segmentPoint]: zero };
-
-    applySegments(nextSegments);
-    setOffset(0);
-    seg.forceHighlight(seg.segmentPoint);
-  }
-
-  return { inputDate, backspaceOrDelete };
+  return (
+    <span
+      {...segmentProps}
+      ref={ref}
+      className="rounded-sm px-0.5 tabular-nums outline-none transition-colors data-[focused=true]:bg-primary/90 data-[selected=true]:bg-primary data-[focused=true]:text-primary-foreground data-[selected=true]:text-primary-foreground"
+    >
+      {text}
+    </span>
+  );
 }
