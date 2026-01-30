@@ -18,28 +18,27 @@ import { useProjectsQuery } from "../queries/use-projects-query";
 import { UpdateProjectForm } from "./update-project-form";
 
 export function ProjectPageContent() {
-  const { data: projects = [], isPending: isProjectsPending } =
-    useProjectsQuery();
+  const { data: projects, isPending: isProjectsPending } = useProjectsQuery();
+  const { data: requests, isPending: isRequestsPending } = useRequests();
 
-  const expProjects = projects.filter(
+  const expProjects = projects?.filter(
     (project) => project.status === ProjectStatus.Exp,
   );
-  const externalProjects = projects.filter(
+
+  const externalProjects = projects?.filter(
     (project) => project.status === ProjectStatus.External,
   );
 
-  const { data: requests = [], isPending: isRequestsPending } = useRequests();
-
   const expTotal = requests
-    .filter((request) => {
+    ?.filter((request) => {
       if (request.status !== RequestStatus.Paid) return false;
-      const project = projects.find(
+      const project = projects?.find(
         (project) => project.id === request.projectId,
       );
       return project?.status === ProjectStatus.Exp;
     })
     .reduce((acc, request) => {
-      const project = projects.find(
+      const project = projects?.find(
         (project) => project.id === request.projectId,
       );
       return acc + (project ? project.expense : 0);
@@ -51,25 +50,25 @@ export function ProjectPageContent() {
       <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4">
         <StatusCard
           title="登録案件数"
-          count={projects.length}
+          count={projects?.length || 0}
           label="件"
           skeleton={isProjectsPending}
         />
         <StatusCard
           title="EXP.案件"
-          count={expProjects.length}
+          count={expProjects?.length || 0}
           label="件"
           skeleton={isProjectsPending}
         />
         <StatusCard
           title="外部案件"
-          count={externalProjects.length}
+          count={externalProjects?.length || 0}
           label="件"
           skeleton={isProjectsPending}
         />
         <StatusCard
           title="EXP.合計金額"
-          count={expTotal}
+          count={expTotal || 0}
           label="円"
           skeleton={isRequestsPending}
         />
@@ -99,7 +98,7 @@ export function ProjectPageContent() {
           </TableRow>
         </TableHeader>
         <TableBody className="bg-white">
-          {projects.map((project) => (
+          {projects?.map((project) => (
             <TableRow key={project.id}>
               <TableCell className="py-4">{project.name}</TableCell>
               <TableCell className="py-4">￥{project.expense}</TableCell>
