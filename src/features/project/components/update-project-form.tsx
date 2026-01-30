@@ -48,6 +48,8 @@ export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
     project.status,
     ProjectStatusSchema,
   );
+  const mutation = useUpdateProjectByIdMutation();
+  const [isSubmitting, setSubmitting] = useState(false);
 
   function resetForm() {
     resetProjectName();
@@ -55,17 +57,13 @@ export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
     resetStatus();
   }
 
-  const mutation = useUpdateProjectByIdMutation();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if ((e.nativeEvent as InputEvent).isComposing) return;
 
     const normalizedValue = toHalfWidth(e.target.value);
     const parsed = Number(normalizedValue);
     setProjectExpense(Number.isNaN(parsed) ? "" : parsed);
-  };
-
-  const [isSubmitting, setSubmitting] = useState(false);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
