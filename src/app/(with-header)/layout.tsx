@@ -4,9 +4,11 @@ import { Header } from "@/features/header/components/header";
 
 export default function ({ children }: PropsWithChildren) {
   return (
-    <>
+    <div>
       <Header />
-      <CenteredLayout>{children}</CenteredLayout>
-    </>
+      <CenteredLayout>
+        <div className="py-6">{children}</div>
+      </CenteredLayout>
+    </div>
   );
 }
