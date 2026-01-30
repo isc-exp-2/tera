@@ -6,8 +6,7 @@ export default function ({ children }: PropsWithChildren) {
   return (
     <div>
       <Header 
-      title="申請管理"
-      subtitle="全ての申請を承認・精算"
+      
        />
       <CenteredLayout>
         <div className="py-6">{children}</div>

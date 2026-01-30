@@ -8,6 +8,5 @@ export function useRequests() {
   return useQuery({
     queryKey: queryKeys.requests,
     queryFn: getRequests,
-    staleTime: Infinity,
   });
 }

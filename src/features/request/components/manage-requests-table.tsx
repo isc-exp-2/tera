@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { type Request, RequestStatus } from "@/entities/request";
 import { useProjectByIdQuery } from "@/features/project/queries/use-project-by-id-query";
+import { updateRequestStatusById } from "@/features/request/update-request-status-by-id";
 import { cn } from "@/lib/utils";
 import { useRequests } from "../queries/useRequests";
 
@@ -30,20 +32,19 @@ function StatusTab({ value, label, count, active }: Props) {
     <TabsTrigger
       value={value}
       className={cn(
+        "cursor-pointer",
         "flex items-center gap-2 rounded-full px-4 py-2 text-sm",
         "border transition-all",
         active
           ? "border-blue-600 bg-blue-600 text-white"
-          : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+          : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100",
       )}
     >
       <span>{label}</span>
       <span
         className={cn(
           "rounded-full px-2 py-0.5 font-medium text-xs",
-          active
-            ? "bg-white/20 text-white"
-            : "bg-gray-100 text-gray-600"
+          active ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600",
         )}
       >
         {count}
@@ -52,23 +53,85 @@ function StatusTab({ value, label, count, active }: Props) {
   );
 }
 
+function ActionButtons({
+  requestId,
+  status,
+}: {
+  requestId: string;
+  status: RequestStatus;
+}) {
+  const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
+
+  const handleUpdate = async (nextStatus: RequestStatus) => {
+    try {
+      setIsPending(true);
+      await updateRequestStatusById(requestId, nextStatus);
+
+      router.refresh();
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  if (status === RequestStatus.Pending) {
+    return (
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="outline"
+          className="cursor-pointer text-red-600"
+          disabled={isPending}
+          onClick={() => handleUpdate(RequestStatus.Rejected)}
+        >
+          却下
+        </Button>
+
+        <Button
+          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700"
+          disabled={isPending}
+          onClick={() => handleUpdate(RequestStatus.Approved)}
+        >
+          承認
+        </Button>
+      </div>
+    );
+  }
+
+  if (status === RequestStatus.Approved) {
+    return (
+      <div className="flex justify-end">
+        <Button
+          className="bg-indigo-600 hover:bg-indigo-700"
+          disabled={isPending}
+          onClick={() => handleUpdate(RequestStatus.Paid)}
+        >
+          精算
+        </Button>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export function ManageRequestsTable() {
   const [keyword, setKeyword] = useState("");
   const [filter, setFilter] = useState<string>(RequestStatus.Pending);
   const { data } = useRequests();
   const statusCounts = {
-  pending: data?.filter((r) => r.status === RequestStatus.Pending).length ?? 0,
-  approved: data?.filter((r) => r.status === RequestStatus.Approved).length ?? 0,
-  paid: data?.filter((r) => r.status === RequestStatus.Paid).length ?? 0,
-  rejected: data?.filter((r) => r.status === RequestStatus.Rejected).length ?? 0,
+    pending:
+      data?.filter((r) => r.status === RequestStatus.Pending).length ?? 0,
+    approved:
+      data?.filter((r) => r.status === RequestStatus.Approved).length ?? 0,
+    paid: data?.filter((r) => r.status === RequestStatus.Paid).length ?? 0,
+    rejected:
+      data?.filter((r) => r.status === RequestStatus.Rejected).length ?? 0,
   };
   const filteredData = data
-  ?.filter((r) => r.status === filter)
-  ?.filter((r) =>
-    r.requestedBy.toLowerCase().includes(keyword.toLowerCase())
-  );
-
-
+    ?.filter((r) => r.status === filter)
+    ?.filter((r) =>
+      r.requestedBy.toLowerCase().includes(keyword.toLowerCase()),
+    );
 
   return (
     <div className="w-full space-y-4">
@@ -90,7 +153,7 @@ export function ManageRequestsTable() {
                 active={filter === RequestStatus.Pending}
               />
 
-                <StatusTab
+              <StatusTab
                 value={RequestStatus.Approved}
                 label="精算待ち"
                 count={statusCounts?.approved ?? 0}
@@ -131,7 +194,7 @@ export function ManageRequestsTable() {
 
           <TableBody>
             {filteredData?.map((r) => (
-              <RequestCell key={r.id} r={r} />
+              <RequestRow key={r.id} r={r} />
             ))}
           </TableBody>
         </Table>
@@ -159,11 +222,11 @@ const STATUS_MAP = {
   },
 };
 
-type RequestCellProps = {
+type RequestRowProps = {
   r: Request;
 };
 
-function RequestCell({ r }: RequestCellProps) {
+function RequestRow({ r }: RequestRowProps) {
   const { data: project } = useProjectByIdQuery(r.projectId);
   const formatDateJP = (date: Date) =>
     date.toLocaleDateString("ja-JP", {
@@ -172,14 +235,17 @@ function RequestCell({ r }: RequestCellProps) {
       day: "numeric",
     });
 
-
   const status = STATUS_MAP[r.status];
 
   return (
     <TableRow>
-
       <TableCell>
-        <Badge className={cn("flex items-center gap-1 rounded-full px-3 py-1 text-sm", status.className)}>
+        <Badge
+          className={cn(
+            "flex items-center gap-1 rounded-full px-3 py-1 text-sm",
+            status.className,
+          )}
+        >
           {status.label}
         </Badge>
       </TableCell>
@@ -204,12 +270,7 @@ function RequestCell({ r }: RequestCellProps) {
       </TableCell>
 
       <TableCell>
-        <div className="justify-endgap-2 flex">
-          <Button variant="outline" className="text-red-600">
-            却下
-          </Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700">承認</Button>
-        </div>
+        <ActionButtons requestId={r.id} status={r.status} />
       </TableCell>
     </TableRow>
   );
