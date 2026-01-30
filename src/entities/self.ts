@@ -67,3 +67,10 @@ export const Self = v.object({
 });
 
 export type Self = v.InferOutput<typeof Self>;
+
+export const User = v.object({
+  uid: AuthSelf.entries.uid,
+  ...UserInfo.entries,
+});
+
+export type User = v.InferOutput<typeof User>;
