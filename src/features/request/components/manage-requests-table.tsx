@@ -18,7 +18,7 @@ import { type Request, RequestStatus } from "@/entities/request";
 import { useProjectByIdQuery } from "@/features/project/queries/use-project-by-id-query";
 import { updateRequestStatusById } from "@/features/request/update-request-status-by-id";
 import { cn } from "@/lib/utils";
-import { useRequests } from "../queries/useRequests";
+import { useRequests } from "../queries/use-request";
 
 type Props = {
   value: string;

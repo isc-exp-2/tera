@@ -9,10 +9,8 @@ export async function Header() {
     <header className="border-b bg-white">
       <CenteredLayout>
         <div className="flex h-20 items-center justify-between">
-          <div className="flex items-center gap-6">
             <Logo />
             <UserMenu />
-          </div>
         </div>
       </CenteredLayout>
     </header>
