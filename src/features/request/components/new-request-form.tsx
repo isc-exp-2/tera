@@ -57,7 +57,9 @@ export function NewRequestForm({
 
       <div className="space-y-2">
         <FormLabel required>日程</FormLabel>
+
         <NewRequestFormCalendar value={form.date} onChange={form.setDate} />
+
         {form.errors.dateError && (
           <p className="text-red-500 text-sm">{form.errors.dateError}</p>
         )}
