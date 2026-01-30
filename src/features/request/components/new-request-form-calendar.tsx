@@ -10,7 +10,8 @@ type Props = {
 export function NewRequestFormCalendar({ value, onChange }: Props) {
   return (
     <IgrDatePicker
-      className="flex w-auto items-center rounded-md border bg-background focus-within:ring-2 focus-within:ring-ring"
+      inputFormat="yyyy/MM/dd"
+      className="flex h-auto w-auto items-center rounded-md border-2 bg-background"
       value={value}
       onChange={(e: CustomEvent<Date | null>) => {
         if (!e.detail) return;
