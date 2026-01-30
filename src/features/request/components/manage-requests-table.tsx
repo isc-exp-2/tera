@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { queryClient } from "@/components/query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,7 +60,6 @@ function ActionButtons({
   requestId: string;
   status: RequestStatus;
 }) {
-  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   const handleUpdate = async (nextStatus: RequestStatus) => {
@@ -68,7 +67,9 @@ function ActionButtons({
       setIsPending(true);
       await updateRequestStatusById(requestId, nextStatus);
 
-      router.refresh();
+      queryClient.invalidateQueries({
+        queryKey: ["requests"],
+      });
     } finally {
       setIsPending(false);
     }
