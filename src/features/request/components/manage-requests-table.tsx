@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { queryClient } from "@/components/query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,8 +14,10 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { type Request, RequestStatus } from "@/entities/request";
+import { Role } from "@/entities/role";
 import { useProjectByIdQuery } from "@/features/project/queries/use-project-by-id-query";
-import { updateRequestStatusById } from "@/features/request/update-request-status-by-id";
+import { useUpdateRequestStatusByIdMutation } from "@/features/request/mutations/use-update-request-status-by-id-mutation";
+import { useSelf } from "@/features/user/hooks/use-self";
 import { cn } from "@/lib/utils";
 import { useRequests } from "../queries/use-request";
 
@@ -60,19 +61,16 @@ function ActionButtons({
   requestId: string;
   status: RequestStatus;
 }) {
-  const [isPending, setIsPending] = useState(false);
+  const { mutate, isPending } = useUpdateRequestStatusByIdMutation();
+  const self = useSelf();
 
-  const handleUpdate = async (nextStatus: RequestStatus) => {
-    try {
-      setIsPending(true);
-      await updateRequestStatusById(requestId, nextStatus);
+  const isTeacherOrHigher = self?.role === Role.Teacher;
 
-      queryClient.invalidateQueries({
-        queryKey: ["requests"],
-      });
-    } finally {
-      setIsPending(false);
-    }
+  const handleUpdate = (nextStatus: RequestStatus) => {
+    mutate({
+      id: requestId,
+      status: nextStatus,
+    });
   };
 
   if (status === RequestStatus.Pending) {
@@ -103,7 +101,7 @@ function ActionButtons({
       <div className="flex justify-end">
         <Button
           className="bg-indigo-600 hover:bg-indigo-700"
-          disabled={isPending}
+          disabled={isPending || !isTeacherOrHigher}
           onClick={() => handleUpdate(RequestStatus.Paid)}
         >
           精算
