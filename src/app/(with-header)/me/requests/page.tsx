@@ -1,5 +1,5 @@
-import { MeRequestsFormat } from "@/features/request/components/me-requests-format";
+import { MeRequestsBody } from "@/features/request/components/me-requests-body";
 
 export default function () {
-  return <MeRequestsFormat />;
+  return <MeRequestsBody />;
 }

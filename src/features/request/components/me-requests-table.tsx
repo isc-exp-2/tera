@@ -1,6 +1,6 @@
 "use client";
-
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/table";
 import { RequestStatus } from "@/entities/request";
 import type { RequestWithProject } from "../hooks/use-new-request-form";
-import { MeRequestsStatusDesign } from "./me-requests-status-design";
+import { MeRequestsDeleteDialog } from "./me-requests-delete-dialog";
+import { RequestStatusBadge } from "./requests-status-badge";
 
 type Props = {
   data: RequestWithProject[];
@@ -27,9 +28,11 @@ export function MeRequestsTable({
   onDelete,
   isDeleting,
 }: Props) {
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   if (loading) {
     return <div className="mt-6">Loading...</div>;
   }
+  const targetRow = data.find((r) => r.id === deleteTargetId);
 
   const formatDateJP = (date: Date) => {
     const y = date.getFullYear();
@@ -43,24 +46,12 @@ export function MeRequestsTable({
       <Table className="mb-6 overflow-hidden rounded-lg shadow">
         <TableHeader className="bg-gray-50">
           <TableRow>
-            <TableHead className="px-2 py-2 text-left font-medium text-lg">
-              ステータス
-            </TableHead>
-            <TableHead className="px-2 py-2 text-left font-medium text-lg">
-              案件内容
-            </TableHead>
-            <TableHead className="px-2 py-2 text-left font-medium text-lg">
-              参加日時
-            </TableHead>
-            <TableHead className="px-2 py-2 text-right font-medium text-lg">
-              金額
-            </TableHead>
-            <TableHead className="px-2 py-2 text-left font-medium text-lg">
-              備考
-            </TableHead>
-            <TableHead className="px-2 py-2 text-left font-medium text-lg">
-              削除
-            </TableHead>
+            <TableHead className="px-2 py-2 text-left">ステータス</TableHead>
+            <TableHead className="px-2 py-2 text-left">案件内容</TableHead>
+            <TableHead className="px-2 py-2 text-left">参加日時</TableHead>
+            <TableHead className="px-2 py-2 text-right">金額</TableHead>
+            <TableHead className="px-2 py-2 text-left">備考</TableHead>
+            <TableHead className="px-2 py-2 text-left">削除</TableHead>
           </TableRow>
         </TableHeader>
 
@@ -81,7 +72,7 @@ export function MeRequestsTable({
               return (
                 <TableRow key={row.id}>
                   <TableCell className="py-4">
-                    <MeRequestsStatusDesign status={row.status} />
+                    <RequestStatusBadge status={row.status} />
                   </TableCell>
 
                   <TableCell className="py-4 font-medium">
@@ -104,7 +95,7 @@ export function MeRequestsTable({
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={() => onDelete(row.id)}
+                      onClick={() => setDeleteTargetId(row.id)}
                       disabled={!canDelete || isDeleting}
                       className="text-red-600 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
                     >
@@ -117,6 +108,21 @@ export function MeRequestsTable({
           )}
         </TableBody>
       </Table>
+      <MeRequestsDeleteDialog
+        open={!!deleteTargetId}
+        onClose={() => setDeleteTargetId(null)}
+        loading={isDeleting}
+        label={
+          targetRow
+            ? `「${targetRow.projectName}」を削除しますか？削除後は元に戻せません。`
+            : undefined
+        }
+        onConfirm={() => {
+          if (!deleteTargetId) return;
+          onDelete(deleteTargetId);
+          setDeleteTargetId(null);
+        }}
+      />
     </div>
   );
 }

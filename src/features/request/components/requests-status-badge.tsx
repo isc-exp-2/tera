@@ -1,4 +1,3 @@
-// components/RequestStatusBadge.tsx
 import { Check, Clock, DollarSign, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RequestFilterStatus } from "../hooks/use-new-request-form";
@@ -30,7 +29,7 @@ const STATUS_CONFIG = {
   },
 } as const;
 
-export function MeRequestsStatusDesign({ status }: Props) {
+export function RequestStatusBadge({ status }: Props) {
   const config = STATUS_CONFIG[status];
   const Icon = config.icon;
 
@@ -41,7 +40,7 @@ export function MeRequestsStatusDesign({ status }: Props) {
         config.className,
       )}
     >
-      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/70">
+      <span className="flex h-5 w-5 items-center justify-center rounded-full">
         <Icon className="h-3 w-3" />
       </span>
       {config.label}
