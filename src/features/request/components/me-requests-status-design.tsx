@@ -1,10 +1,10 @@
 // components/RequestStatusBadge.tsx
 import { Check, Clock, DollarSign, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { RequestStatus } from "../hooks/use-new-request-form";
+import type { RequestFilterStatus } from "../hooks/use-new-request-form";
 
 type Props = {
-  status: Exclude<RequestStatus, "all">;
+  status: Exclude<RequestFilterStatus, "all">;
 };
 
 const STATUS_CONFIG = {

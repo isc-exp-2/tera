@@ -127,18 +127,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-@layer components {
-  igc-date-picker::part(prefix),
-  igc-date-picker::part(suffix) {
-    border: none;
-  }
-  igc-date-picker::part(prefix) {
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-
-  igc-date-picker::part(input) {
-    padding-left: 6px;
-  }
-}

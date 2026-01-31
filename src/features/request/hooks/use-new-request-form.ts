@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
+import type { Request, RequestStatus } from "@/entities/request";
 import v from "@/entities/valibot";
 import { useProjectsQuery } from "@/features/project/queries/use-projects-query";
-import { useSelf } from "@/features/user/hooks/use-self";
+
 import { useFormValue } from "@/hooks/useFormValue";
 import { useCreateRequestMutation } from "../mutations/use-create-request-mutation";
 import { useDeleteMyRequestByIdMutation } from "../mutations/use-delete-my-request-by-id-mutation";
@@ -94,43 +95,21 @@ export function useNewRequestForm(onSuccess: () => void) {
   };
 }
 
-export type RequestStatus =
-  | "all"
-  | "pending"
-  | "approved"
-  | "rejected"
-  | "paid";
+export type RequestFilterStatus = RequestStatus | "all";
 
-export type Request = {
-  id: string;
-  projectId: string;
-  requestedBy: string;
-  date: Date;
-  memo: string;
-  status: Exclude<RequestStatus, "all">;
-};
-
-export type RequestWithProject = {
-  id: string;
-  status: Request["status"];
-  date: Date;
-  memo: string;
-
+export type RequestWithProject = Request & {
   projectName: string;
   expense: number;
-
-  requestedByName: string;
 };
 
 export function useMeRequestTable() {
-  const [status, setStatus] = useState<RequestStatus>("all");
+  const [status, setStatus] = useState<RequestFilterStatus>("all");
 
   const requestsQuery = useMyRequestsQuery();
   const projectsQuery = useProjectsQuery();
-  const self = useSelf();
 
   const allData = useMemo<RequestWithProject[]>(() => {
-    if (!requestsQuery.data || !projectsQuery.data || !self) {
+    if (!requestsQuery.data || !projectsQuery.data) {
       return [];
     }
 
@@ -141,25 +120,19 @@ export function useMeRequestTable() {
       ]),
     );
 
-    const requesterName = `${self.lastName} ${self.firstName}`;
-
     return requestsQuery.data
       .map((req): RequestWithProject | null => {
         const project = projectMap.get(req.projectId);
         if (!project) return null;
 
         return {
-          id: req.id,
-          status: req.status,
-          date: req.date,
-          memo: req.memo,
+          ...req,
           projectName: project.name,
           expense: project.expense,
-          requestedByName: requesterName,
         };
       })
       .filter((row): row is RequestWithProject => row !== null);
-  }, [requestsQuery.data, projectsQuery.data, self]);
+  }, [requestsQuery.data, projectsQuery.data]);
 
   const filteredData = useMemo(() => {
     if (status === "all") return allData;
