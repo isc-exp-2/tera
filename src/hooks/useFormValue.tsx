@@ -26,6 +26,10 @@ export function useFormValue<T>(
       setError(result.issues[0].message);
     }
   }
+  function reset() {
+    setValue(initialValue);
+    setError(null);
+  }
 
-  return [value, handleSetValue, error] as const;
+  return [value, handleSetValue, error, reset] as const;
 }
