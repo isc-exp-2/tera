@@ -18,7 +18,8 @@ import { Role } from "@/entities/role";
 import { useProjectByIdQuery } from "@/features/project/queries/use-project-by-id-query";
 import { useUpdateRequestStatusByIdMutation } from "@/features/request/mutations/use-update-request-status-by-id-mutation";
 import { useSelf } from "@/features/user/hooks/use-self";
-import { cn } from "@/lib/utils";
+import { useUserByIdQuery } from "@/features/user/queries/use-user-by-id-query";
+import { cn, formatUserName } from "@/lib/utils";
 import { useRequests } from "../queries/use-request";
 
 type Props = {
@@ -116,6 +117,7 @@ export function ManageRequestsTable() {
   const [keyword, setKeyword] = useState("");
   const [filter, setFilter] = useState<string>(RequestStatus.Pending);
   const { data } = useRequests();
+  // TODO: keyword で絞り込んだ時に表示件数と合わせる
   const statusCounts = {
     pending:
       data?.filter((r) => r.status === RequestStatus.Pending).length ?? 0,
@@ -125,11 +127,7 @@ export function ManageRequestsTable() {
     rejected:
       data?.filter((r) => r.status === RequestStatus.Rejected).length ?? 0,
   };
-  const filteredData = data
-    ?.filter((r) => r.status === filter)
-    ?.filter((r) =>
-      r.requestedBy.toLowerCase().includes(keyword.toLowerCase()),
-    );
+  const filteredData = data?.filter((r) => r.status === filter);
 
   return (
     <div className="w-full space-y-4">
@@ -192,7 +190,7 @@ export function ManageRequestsTable() {
 
           <TableBody>
             {filteredData?.map((r) => (
-              <RequestRow key={r.id} r={r} />
+              <RequestRow key={r.id} r={r} keyword={keyword} />
             ))}
           </TableBody>
         </Table>
@@ -222,10 +220,12 @@ const STATUS_MAP = {
 
 type RequestRowProps = {
   r: Request;
+  keyword: string;
 };
 
-function RequestRow({ r }: RequestRowProps) {
+function RequestRow({ r, keyword }: RequestRowProps) {
   const { data: project } = useProjectByIdQuery(r.projectId);
+  const { data: user } = useUserByIdQuery(r.requestedBy);
   const formatDateJP = (date: Date) =>
     date.toLocaleDateString("ja-JP", {
       year: "numeric",
@@ -234,6 +234,10 @@ function RequestRow({ r }: RequestRowProps) {
     });
 
   const status = STATUS_MAP[r.status];
+
+  if (!user?.firstName.includes(keyword) && !user?.lastName.includes(keyword)) {
+    return null;
+  }
 
   return (
     <TableRow>
@@ -248,7 +252,7 @@ function RequestRow({ r }: RequestRowProps) {
         </Badge>
       </TableCell>
 
-      <TableCell>{r.requestedBy}</TableCell>
+      <TableCell>{user ? formatUserName(user) : ""}</TableCell>
 
       <TableCell className="whitespace-pre-line">
         {project?.name}
