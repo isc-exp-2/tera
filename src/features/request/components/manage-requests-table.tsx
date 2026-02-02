@@ -33,7 +33,6 @@ function StatusTab({ value, label, count, active }: Props) {
     <TabsTrigger
       value={value}
       className={cn(
-        "cursor-pointer",
         "flex items-center gap-2 rounded-full px-4 py-2 text-sm",
         "border transition-all",
         active
@@ -78,7 +77,7 @@ function ActionButtons({
       <div className="flex justify-end gap-2">
         <Button
           variant="outline"
-          className="cursor-pointer text-red-600"
+          className="text-red-600"
           disabled={isPending}
           onClick={() => handleUpdate(RequestStatus.Rejected)}
         >
@@ -86,7 +85,7 @@ function ActionButtons({
         </Button>
 
         <Button
-          className="cursor-pointer bg-indigo-600 hover:bg-indigo-700"
+          className="bg-indigo-600 hover:bg-indigo-700"
           disabled={isPending}
           onClick={() => handleUpdate(RequestStatus.Approved)}
         >
