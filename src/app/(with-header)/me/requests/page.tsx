@@ -1,5 +1,5 @@
-import { NewRequestButton } from "@/features/request/components/new-request-button";
+import { MeRequestsBody } from "@/features/request/components/me-requests-body";
 
 export default function () {
-  return <NewRequestButton />;
+  return <MeRequestsBody />;
 }
