@@ -14,6 +14,9 @@ export function useUpdateRequestStatusByIdMutation() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.myRequests,
       });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.requests,
+      });
     },
   });
 }
