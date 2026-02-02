@@ -34,7 +34,7 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="mr-5 h-10 w-10 cursor-pointer">
+        <Avatar className="mr-5 h-10 w-10">
           <AvatarImage src={self.picture} />
           <AvatarFallback>{self.firstName}</AvatarFallback>
         </Avatar>
@@ -57,7 +57,7 @@ export function UserMenu() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          className="cursor-pointer text-red-600"
+          className="text-red-600"
           onClick={async () => {
             await logOut();
           }}
