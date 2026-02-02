@@ -8,7 +8,7 @@ export default async function () {
   const self = await getSelf();
   if (!self) return;
   return (
-    <main className="mx-auto max-w-6xl py-8">
+    <main className="mx-auto py-8">
       <div className="mb-8">
         <h1 className="mb-2 font-medium text-gray-900 text-xl tracking-[-0.3em]">
           ようこそ

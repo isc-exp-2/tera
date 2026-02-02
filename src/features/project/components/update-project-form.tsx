@@ -83,7 +83,7 @@ export function UpdateProjectForm({ project }: UpdateProjectFormProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild className="cursor-pointer">
+      <DialogTrigger asChild>
         <Pen className="h-4 w-4 text-indigo-600" />
       </DialogTrigger>
 
