@@ -10,10 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ProjectStatus } from "@/entities/project";
+import { type Project, ProjectStatus } from "@/entities/project";
 import { RequestStatus } from "@/entities/request";
 import { AddProjectForm } from "@/features/project/components/add-project-form";
 import { useRequests } from "@/features/request/queries/use-requests";
+import { useUserByIdQuery } from "@/features/user/queries/use-user-by-id-query";
+import { formatUserName } from "@/lib/utils";
 import { useProjectsQuery } from "../queries/use-projects-query";
 import { UpdateProjectForm } from "./update-project-form";
 
@@ -99,30 +101,7 @@ export function ProjectPageContent() {
         </TableHeader>
         <TableBody className="bg-white">
           {projects?.map((project) => (
-            <TableRow key={project.id}>
-              <TableCell className="py-4">{project.name}</TableCell>
-              <TableCell className="py-4">￥{project.expense}</TableCell>
-              <TableCell className="py-4">
-                <Badge
-                  className={
-                    project.status === ProjectStatus.External
-                      ? "bg-sky-50 p-3 text-sky-700 dark:bg-sky-950 dark:text-sky-300"
-                      : "bg-purple-50 p-3 text-purple-700 dark:bg-purple-950 dark:text-purple-300"
-                  }
-                >
-                  {project.status === ProjectStatus.External
-                    ? "外部案件"
-                    : "EXP."}
-                </Badge>
-              </TableCell>
-              <TableCell className="py-4">{project.createdBy}</TableCell>
-              <TableCell className="py-4">
-                {project.createdAt.toLocaleDateString("ja-JP")}
-              </TableCell>
-              <TableCell className="py-4">
-                <UpdateProjectForm project={project} />
-              </TableCell>
-            </TableRow>
+            <ProjectsTableRow key={project.id} project={project} />
           ))}
         </TableBody>
       </Table>
@@ -152,5 +131,34 @@ function StatusCard({ title, count, label, skeleton }: StatusCardProps) {
         </CardContent>
       )}
     </Card>
+  );
+}
+
+function ProjectsTableRow({ project }: { project: Project }) {
+  const { data: user } = useUserByIdQuery(project.createdBy);
+
+  return (
+    <TableRow key={project.id}>
+      <TableCell className="py-4">{project.name}</TableCell>
+      <TableCell className="py-4">￥{project.expense}</TableCell>
+      <TableCell className="py-4">
+        <Badge
+          className={
+            project.status === ProjectStatus.External
+              ? "bg-sky-50 p-3 text-sky-700 dark:bg-sky-950 dark:text-sky-300"
+              : "bg-purple-50 p-3 text-purple-700 dark:bg-purple-950 dark:text-purple-300"
+          }
+        >
+          {project.status === ProjectStatus.External ? "外部案件" : "EXP."}
+        </Badge>
+      </TableCell>
+      <TableCell className="py-4">{user ? formatUserName(user) : ""}</TableCell>
+      <TableCell className="py-4">
+        {project.createdAt.toLocaleDateString("ja-JP")}
+      </TableCell>
+      <TableCell className="py-4">
+        <UpdateProjectForm project={project} />
+      </TableCell>
+    </TableRow>
   );
 }
