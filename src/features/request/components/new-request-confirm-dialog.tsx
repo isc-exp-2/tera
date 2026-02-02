@@ -26,7 +26,6 @@ export function NewRequestConfirmForm({
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
-
         if (form.isPending) return;
         onOpenChange(nextOpen);
       }}
@@ -52,7 +51,6 @@ export function NewRequestConfirmForm({
           onSubmit={(e) => {
             e.preventDefault();
             if (form.isPending) return;
-
             form.submit();
           }}
           className="space-y-4"
