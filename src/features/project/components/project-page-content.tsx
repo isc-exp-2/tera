@@ -123,7 +123,7 @@ function StatusCard({ title, count, label, skeleton }: StatusCardProps) {
         <CardTitle className="text-sm">{title}</CardTitle>
       </CardHeader>
       {skeleton ? (
-        <Skeleton className="h-10 w-40 rounded-md" />
+        <Skeleton className="ml-5 h-10 w-20 rounded-md" />
       ) : (
         <CardContent className="text-2xl">
           {count}
