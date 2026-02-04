@@ -101,9 +101,10 @@ export function ProjectPageContent() {
         </TableHeader>
         <TableBody className="bg-white">
           {isProjectsPending
-            ? Array.from([1, 2, 3, 4, 5]).map((num) => (
-                <ProjectTableSkeletonRow key={num} />
-              ))
+            ? Array.from(
+                { length: 5 },
+                (_, index) => `skeleton-row-${index}`,
+              ).map((id) => <ProjectTableSkeletonRow key={id} />)
             : projects?.map((project) => (
                 <ProjectsTableRow key={project.id} project={project} />
               ))}
@@ -174,24 +175,13 @@ function ProjectsTableRow({ project }: { project: Project }) {
 function ProjectTableSkeletonRow() {
   return (
     <TableRow>
-      <TableCell className="py-4">
-        <Skeleton className="h-6 w-full rounded-md" />
-      </TableCell>
-      <TableCell className="py-4">
-        <Skeleton className="h-6 w-full rounded-md" />
-      </TableCell>
-      <TableCell className="py-4">
-        <Skeleton className="h-6 w-full rounded-md" />
-      </TableCell>
-      <TableCell className="py-4">
-        <Skeleton className="h-6 w-full rounded-md" />
-      </TableCell>
-      <TableCell className="py-4">
-        <Skeleton className="h-6 w-full rounded-md" />
-      </TableCell>
-      <TableCell className="py-4">
-        <Skeleton className="h-6 w-full rounded-md" />
-      </TableCell>
+      {Array.from({ length: 6 }, (_, index) => `skeleton-cell-${index}`).map(
+        (id) => (
+          <TableCell className="py-4" key={id}>
+            <Skeleton className="h-6 w-full rounded-md" />
+          </TableCell>
+        ),
+      )}
     </TableRow>
   );
 }
