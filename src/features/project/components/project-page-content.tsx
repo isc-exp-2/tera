@@ -100,32 +100,13 @@ export function ProjectPageContent() {
           </TableRow>
         </TableHeader>
         <TableBody className="bg-white">
-          {isProjectsPending ? (
-            <TableRow>
-              <TableCell className="py-4">
-                <Skeleton className="h-6 w-full rounded-md" />
-              </TableCell>
-              <TableCell className="py-4">
-                <Skeleton className="h-6 w-full rounded-md" />
-              </TableCell>
-              <TableCell className="py-4">
-                <Skeleton className="h-6 w-full rounded-md" />
-              </TableCell>
-              <TableCell className="py-4">
-                <Skeleton className="h-6 w-full rounded-md" />
-              </TableCell>
-              <TableCell className="py-4">
-                <Skeleton className="h-6 w-full rounded-md" />
-              </TableCell>
-              <TableCell className="py-4">
-                <Skeleton className="h-6 w-full rounded-md" />
-              </TableCell>
-            </TableRow>
-          ) : (
-            projects?.map((project) => (
-              <ProjectsTableRow key={project.id} project={project} />
-            ))
-          )}
+          {isProjectsPending
+            ? Array.from([1, 2, 3, 4, 5]).map((num) => (
+                <ProjectTableSkeletonRow key={num} />
+              ))
+            : projects?.map((project) => (
+                <ProjectsTableRow key={project.id} project={project} />
+              ))}
         </TableBody>
       </Table>
     </>
@@ -185,6 +166,31 @@ function ProjectsTableRow({ project }: { project: Project }) {
       </TableCell>
       <TableCell className="py-4">
         <UpdateProjectForm project={project} />
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function ProjectTableSkeletonRow() {
+  return (
+    <TableRow>
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-full rounded-md" />
+      </TableCell>
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-full rounded-md" />
+      </TableCell>
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-full rounded-md" />
+      </TableCell>
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-full rounded-md" />
+      </TableCell>
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-full rounded-md" />
+      </TableCell>
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-full rounded-md" />
       </TableCell>
     </TableRow>
   );
