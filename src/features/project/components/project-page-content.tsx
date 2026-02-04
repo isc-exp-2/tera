@@ -100,9 +100,14 @@ export function ProjectPageContent() {
           </TableRow>
         </TableHeader>
         <TableBody className="bg-white">
-          {projects?.map((project) => (
-            <ProjectsTableRow key={project.id} project={project} />
-          ))}
+          {isProjectsPending
+            ? Array.from(
+                { length: 5 },
+                (_, index) => `skeleton-row-${index}`,
+              ).map((id) => <ProjectTableSkeletonRow key={id} />)
+            : projects?.map((project) => (
+                <ProjectsTableRow key={project.id} project={project} />
+              ))}
         </TableBody>
       </Table>
     </>
@@ -154,13 +159,29 @@ function ProjectsTableRow({ project }: { project: Project }) {
           {project.status === ProjectStatus.External ? "外部案件" : "EXP."}
         </Badge>
       </TableCell>
-      <TableCell className="py-4">{user ? formatUserName(user) : ""}</TableCell>
+      <TableCell className="py-4">
+        {user ? formatUserName(user) : <Skeleton className="w-full py-4" />}
+      </TableCell>
       <TableCell className="py-4">
         {project.createdAt.toLocaleDateString("ja-JP")}
       </TableCell>
       <TableCell className="py-4">
         <UpdateProjectForm project={project} />
       </TableCell>
+    </TableRow>
+  );
+}
+
+function ProjectTableSkeletonRow() {
+  return (
+    <TableRow>
+      {Array.from({ length: 6 }, (_, index) => `skeleton-cell-${index}`).map(
+        (id) => (
+          <TableCell className="py-4" key={id}>
+            <Skeleton className="h-6 w-full rounded-md" />
+          </TableCell>
+        ),
+      )}
     </TableRow>
   );
 }
