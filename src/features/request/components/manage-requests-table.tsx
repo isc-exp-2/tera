@@ -235,7 +235,7 @@ function RequestRow({ r, keyword }: RequestRowProps) {
 
   const status = STATUS_MAP[r.status];
 
-  if (!user?.firstName.includes(keyword) && !user?.lastName.includes(keyword)) {
+  if (!user?.name.includes(keyword)) {
     return null;
   }
 

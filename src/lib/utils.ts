@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatUserName(user: User) {
-  return `${user.lastName} ${user.firstName}`;
+  return `${user.name} `;
 }
