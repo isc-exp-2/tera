@@ -68,7 +68,7 @@ export function OnboardingForm() {
             <div className="mb-5 flex flex-col gap-6">
               <NameBox
                 text="名前"
-                placeholder="山田太郎"
+                placeholder="山田 太郎"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 Errormsg={nameError}

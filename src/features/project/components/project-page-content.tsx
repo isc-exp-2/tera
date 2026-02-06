@@ -15,7 +15,6 @@ import { RequestStatus } from "@/entities/request";
 import { AddProjectForm } from "@/features/project/components/add-project-form";
 import { useRequests } from "@/features/request/queries/use-requests";
 import { useUserByIdQuery } from "@/features/user/queries/use-user-by-id-query";
-import { formatUserName } from "@/lib/utils";
 import { useProjectsQuery } from "../queries/use-projects-query";
 import { UpdateProjectForm } from "./update-project-form";
 
@@ -160,7 +159,7 @@ function ProjectsTableRow({ project }: { project: Project }) {
         </Badge>
       </TableCell>
       <TableCell className="py-4">
-        {user ? formatUserName(user) : <Skeleton className="w-full py-4" />}
+        {user ? user.name : <Skeleton className="w-full py-4" />}
       </TableCell>
       <TableCell className="py-4">
         {project.createdAt.toLocaleDateString("ja-JP")}
