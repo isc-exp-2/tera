@@ -41,7 +41,7 @@ export function UserMenu() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56 font-normal font-sans">
-        <DropdownItem label="氏名" value={`${self.name} `} />
+        <DropdownItem label="氏名" value={self.name} />
 
         <DropdownItem label="メールアドレス" value={self.email} />
 

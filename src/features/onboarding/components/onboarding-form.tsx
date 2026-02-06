@@ -71,7 +71,7 @@ export function OnboardingForm() {
                 placeholder="山田 太郎"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                Errormsg={nameError}
+                errorMsg={nameError}
               />
             </div>
             <div className="mb-5">
@@ -152,14 +152,14 @@ type NameBoxProps = {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  Errormsg: string | null;
+  errorMsg: string | null;
 };
 function NameBox({
   text,
   placeholder,
   value,
   onChange,
-  Errormsg,
+  errorMsg,
 }: NameBoxProps) {
   return (
     <div>
@@ -168,7 +168,7 @@ function NameBox({
         <span className="text-red-500">*</span>
       </Label>
       <Input placeholder={placeholder} value={value} onChange={onChange} />
-      {Errormsg && <p className="mt-1 text-red-500 text-sm">{Errormsg}</p>}
+      {errorMsg && <p className="mt-1 text-red-500 text-sm">{errorMsg}</p>}
     </div>
   );
 }
